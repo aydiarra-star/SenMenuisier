@@ -58,3 +58,11 @@ Branche en conception et développement. Pas prête pour production. Aucun merge
 2. Installer et vérifier l'exécution réelle des tests et du build sur la branche.
 3. Connecter le moteur d'estimation à une nomenclature validée, sans afficher de débit exact avant recette métier.
 4. Préparer les migrations et politiques RLS après validation des décisions métier et sans provisionner de service payant.
+
+## Ajustement de fidélité visuelle — profil d'en-tête
+
+- Restauration dans l'en-tête React du badge de profil illustré, présent dans le HTML de référence, avec repli visuel « SM » si l'image ne charge pas.
+- Fichiers modifiés : `src/app/page.tsx` et `src/app/globals.css`.
+- Commits : `6a8c933` et `9b7f49d`.
+- Cet ajustement isolé ne signifie pas que l'interface complète est désormais identique au HTML : les modules Production, Score Santé, Base de Prix, CRM et Feuille de Route restent à comparer et à connecter selon la recette.
+- Aucun workflow ni statut CI n'a été retourné pour le dernier commit contrôlé. Aucun nouveau déploiement Render n'est listé ; l'aperçu reste sur le commit antérieur confirmé.
