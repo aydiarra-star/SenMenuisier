@@ -1,49 +1,44 @@
-# État de l'implémentation — phase 1
+# État de l'implémentation — phase de conception V1
 
 ## Dépôt et environnement
-
 - Dépôt : https://github.com/aydiarra-star/SenMenuisier
-- Branche de travail : `design/foundation-v1`
-- Pull request de suivi : https://github.com/aydiarra-star/SenMenuisier/pull/1
-- Prévisualisation Render : https://senmenuisier-preview.onrender.com
-- Service Render : `senmenuisier-preview`, plan gratuit, région Francfort, déploiement automatique depuis la branche de travail.
-- Aucun projet Supabase, aucune base de données et aucun service payant n'ont été provisionnés.
+- Branche : `design/foundation-v1`
+- PR de suivi : https://github.com/aydiarra-star/SenMenuisier/pull/1
+- Aperçu Render : https://senmenuisier-preview.onrender.com
+- Service Render : `senmenuisier-preview`, plan gratuit, Francfort, auto-déploiement depuis la branche.
+- Aucun projet Supabase, aucune base de données et aucun service payant provisionnés.
 
-## Ce qui est présent sur la branche
+## Socle technique
+- Next.js App Router, React, TypeScript, Tailwind/CSS et Lucide.
+- Workflow GitHub Actions pour typecheck, lint et build.
+- Next.js et eslint-config-next alignés sur 15.5.28.
+- Première adaptation React des six espaces, quatre modèles de meubles, dimensions et estimation indicative.
+- Aperçu en ligne issu du commit 868d491 ; les commits de conception plus récents ne sont pas encore confirmés comme déployés.
 
-- Socle Next.js App Router avec TypeScript strict.
-- Métadonnées de l'application et variables d'environnement documentées.
-- Première intégration React de l'interface SenMenuisier :
-  - navigation des six espaces dans l'ordre de la fiche ;
-  - catalogue et quatre modèles de meubles ;
-  - contrôles de dimensions et estimation paramétrique indicative ;
-  - écrans Production & Passeport QR, Score Santé, Base de Prix, CRM et Feuille de Route ;
-  - adaptation mobile et palette de référence bois, vert forêt, sable, graphite et laiton.
-- Styles dans `src/app/globals.css`.
-- Workflow GitHub Actions : typecheck, lint et build.
-- Next.js et `eslint-config-next` alignés sur la version corrigée `15.5.28`.
+## Conception ajoutée dans cette phase
+- `docs/MODELE_METIER_V1.md` : entités, rôles, matrice d'accès, règles de sécurité, architecture et phasage.
+- `docs/RECETTE_INTERFACE_REFERENCE.md` : critères de recette alignés sur les six modules et interactions du HTML fourni.
+- `docs/AUDIT_CALCULATEUR_SOURCE.md` : formule réellement écrite dans le HTML, paramètres, incohérences d'unités et risques.
+- `docs/CONCEPTION_V1.md` : vision produit initiale.
+- `docs/PROJECT_RULES.md` : règles de contribution et livraison.
 
-## Limites explicites
+## Constats techniques importants
+- L'interface React en ligne est une première adaptation, pas une reproduction exacte du HTML de référence.
+- La formule du HTML est volumétrique et ne constitue pas un véritable plan de débit. Les valeurs de matériaux, pertes, main-d'œuvre et marge nécessitent validation métier ; l'audit détaillé est dans `docs/AUDIT_CALCULATEUR_SOURCE.md`.
+- Les commandes, clients, prix, scores et dossiers visibles restent des données de démonstration.
+- Les devis ne sont pas enregistrés, les QR ne sont pas émis/vérifiés et l'impression métier n'est pas opérationnelle.
+- Auth, PostgreSQL, RLS, isolation multi-ateliers, stockage privé et audit applicatif restent à construire.
+- La nouvelle mise à jour de dépendances doit encore être vérifiée par CI et par un nouveau déploiement Render.
 
-- L'écran actuellement déployé est une première adaptation React de la fiche, pas encore une reproduction exacte du HTML source. La comparaison visuelle et fonctionnelle détaillée reste à faire.
-- Les commandes, prix, scores et dossiers affichés sont des exemples de démonstration.
-- Le calculateur utilise une formule volumétrique simplifiée ; il ne produit pas encore un plan de débit ou une liste de coupe fiable.
-- Les formulaires de devis ne sauvegardent aucune donnée.
-- Les passeports QR ne sont pas émis ni vérifiés.
-- Les boutons de démonstration ne doivent pas être interprétés comme des opérations métier réelles.
-- Authentification, base de données, isolation multi-ateliers, permissions, stockage sécurisé et journal d'audit restent à construire.
-- La validation GitHub du commit précédent a réussi ; la mise à jour de dépendances déclenche une nouvelle validation. Le nouveau build Render doit également être vérifié.
+## Ordre de travail restant
+1. Vérifier CI et le déploiement des commits récents.
+2. Comparer et corriger la fidélité visuelle/fonctionnelle à partir du HTML fourni, sans changer la structure ni inventer d'écrans.
+3. Valider les décisions métier ouvertes dans `docs/MODELE_METIER_V1.md`.
+4. Construire le schéma, Auth, adhésions, rôles, RLS et stockage privé ; tester les accès croisés entre deux ateliers.
+5. Implémenter le cycle devis → acceptation → dossier de fabrication → étapes → passeport QR.
+6. Connecter les six espaces à des données réelles et supprimer les faux succès.
+7. Valider le calculateur avec des menuisiers pilotes et des nomenclatures réelles.
+8. Recette sécurité, sauvegarde, supervision et validation explicite avant fusion dans `main` et production.
 
-## Prochaines étapes obligatoires
-
-1. Comparer la page déployée au fichier HTML de référence, section par section, puis corriger les écarts sans inventer de nouvelle interface.
-2. Mettre en place le socle Supabase : schéma, migrations, Auth, Storage, RLS et rôles, après validation du choix d'environnement.
-3. Implémenter l'isolation stricte des ateliers et la confidentialité des coûts/marges.
-4. Connecter les six espaces à des données réelles et remplacer les démonstrations par des états vides tant qu'un atelier n'a pas de données.
-5. Implémenter devis, dossiers de fabrication, QR publics à données limitées, impression et journal d'audit.
-6. Ajouter les tests métier et tests d'accès multi-ateliers.
-7. Effectuer une recette complète avant toute fusion dans `main` ou mise en production.
-
-## Règle de livraison
-
-La branche n'est pas prête pour la production. Ne pas fusionner dans `main` avant la comparaison de l'interface, l'achèvement des contrôles de sécurité, les tests métier et la validation explicite de l'utilisateur.
+## Statut de livraison
+Branche en conception et développement. Pas prête pour production. Aucun merge vers `main` ne doit être fait avant tests, revue de sécurité, recette de l'interface et accord explicite de l'utilisateur.
