@@ -42,3 +42,19 @@
 
 ## Statut de livraison
 Branche en conception et développement. Pas prête pour production. Aucun merge vers `main` ne doit être fait avant tests, revue de sécurité, recette de l'interface et accord explicite de l'utilisateur.
+
+## Travail ajouté ensuite — moteur d'estimation métier
+
+- `src/lib/estimate.ts` : fonction pure d'estimation à partir de quantités matière fournies par une nomenclature, de prix dont les unités doivent correspondre, de pertes explicites, de main-d'œuvre, quincaillerie, finition, charges et marge brute cible.
+- `src/lib/estimate.test.ts` : tests des calculs, des unités incompatibles et des valeurs invalides.
+- Cette fonction ne déduit pas les quantités à partir des dimensions et ne produit pas de plan de débit.
+- Commits : `0cf815b` et `9c60753` sur `design/foundation-v1`.
+- À la vérification, aucun workflow CI ni statut de contrôle n'était retourné pour le commit de tests. La validation automatisée de ces nouveaux fichiers reste donc à confirmer.
+- Le service Render est bien configuré pour suivre `design/foundation-v1`, mais le seul déploiement listé reste celui du commit `868d491`. Le nouveau moteur n'est pas confirmé en ligne.
+
+## Prochaine séquence technique
+
+1. Rendre l'interface conforme au HTML de référence sans modifier ses six onglets ni son organisation.
+2. Installer et vérifier l'exécution réelle des tests et du build sur la branche.
+3. Connecter le moteur d'estimation à une nomenclature validée, sans afficher de débit exact avant recette métier.
+4. Préparer les migrations et politiques RLS après validation des décisions métier et sans provisionner de service payant.
