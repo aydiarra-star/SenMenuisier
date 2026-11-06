@@ -10,7 +10,7 @@ revoke usage, select on sequence public.audit_events_id_seq from authenticated;
 revoke update on public.workshops from authenticated;
 grant update (name, city) on public.workshops to authenticated;
 
-create or replace function public.touch_updated_at()
+create or replace function private.touch_updated_at()
 returns trigger
 language plpgsql
 set search_path = ''
@@ -21,14 +21,14 @@ begin
 end;
 $$;
 
-revoke all on function public.touch_updated_at() from public, anon, authenticated;
+revoke all on function private.touch_updated_at() from public, anon, authenticated;
 
 create trigger profiles_touch_updated_at
 before update on public.profiles
-for each row execute function public.touch_updated_at();
+for each row execute function private.touch_updated_at();
 
 create trigger workshops_touch_updated_at
 before update on public.workshops
-for each row execute function public.touch_updated_at();
+for each row execute function private.touch_updated_at();
 
 commit;
