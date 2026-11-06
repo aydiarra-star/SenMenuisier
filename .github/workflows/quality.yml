@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - design/foundation-v1
+      - backend/**
   pull_request:
     branches:
       - main
       - design/foundation-v1
+      - backend/**
 
 permissions:
   contents: read
