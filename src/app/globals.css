@@ -229,3 +229,24 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #D4A3
 .workspace-toast{position:fixed;z-index:40;right:18px;bottom:18px;display:flex;align-items:center;gap:16px;max-width:min(480px,calc(100vw - 36px));padding:12px 15px;border:1px solid #D4A373;border-radius:12px;background:#fffefa;box-shadow:var(--shadow);color:var(--graphite);font-size:10px}
 .workspace-toast button{border:0;background:transparent;color:inherit;font-size:20px}
 @media(max-width:620px){.module-form{grid-template-columns:1fr}.module-wide{grid-column:auto}.module-record{align-items:flex-start;flex-direction:column}.record-actions{width:100%;justify-content:flex-start}.health-score-panel{padding:18px}}
+
+
+/* Palette d'interface blanc & or : seules les surfaces et fonds de composants changent.
+   Les couleurs des textes, icônes, logo et visuels/objets restent celles du design existant. */
+.nav-item.active{background:#80602e;border-color:#80602e;box-shadow:0 6px 15px #80602e25}
+.welcome-band{background:linear-gradient(112deg,#705323 0%,#8b6a2c 62%,#a78643 100%);box-shadow:0 18px 42px -25px #70532366}
+.health-chip{background:#80602e;border-color:#80602e}
+.quote-chip{background:#80602e;border-color:#80602e}
+.quote-chip:hover{background:#705323}
+.version{background:#80602e}
+.wood-button{background:#80602e}
+.wood-button:hover{background:#705323}
+.local-only{background:#fbf6e9;border-color:#e8d9b8}
+.dimension-sliders label{background:#fffdf7}
+.assumptions{background:#fbf6e9}
+.feature-strip{background:linear-gradient(110deg,#fffefa,#fbf6e9)}
+.craft-icon,.public-feature-icon{background:#fbf6e9;border-color:#e8d9b8}
+.public-header nav .public-header-cta,.public-primary{background:#80602e}
+.public-header nav .public-header-cta:hover,.public-primary:hover{background:#705323}
+.public-workshop{background:#fbf6e9;border-color:#e8d9b8}
+.public-workshop-icon{background:#80602e}
