@@ -29,9 +29,7 @@ jobs:
         with:
           node-version: 24.22.1
       - name: Installer les dépendances
-        run: npm install --no-audit --no-fund
-      - name: Générer le verrouillage des dépendances
-        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
       - name: Auditer les dépendances
         run: |
           npm audit --json > npm-audit.json || true
