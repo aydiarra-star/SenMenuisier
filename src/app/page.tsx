@@ -257,7 +257,7 @@ export default function HomePage() {
                 <button className="wood-button quote-prepare-button" type="button" disabled={!estimate || !measurementsVerified || !clientName.trim()} onClick={() => setQuotePrepared(true)}>Préparer l’aperçu du devis</button>
                 {!measurementsVerified && <p className="quote-hint">Confirmez d’abord les mesures sur place.</p>}
                 {measurementsVerified && !estimate && <p className="quote-hint">Complétez les coûts pour calculer un montant fiable.</p>}
-                {quotePrepared && estimate && <div className="quote-preview" role="status">
+                {quotePrepared && estimate && <><div className="quote-preview" role="status">
                   <div className="furniture-summary-head"><b>Aperçu du devis · brouillon</b><span>Non envoyé</span></div>
                   <p><strong>Client :</strong> {clientName} {clientContact.trim() ? "· " + clientContact : ""}</p>
                   <p><strong>Ouvrage :</strong> {selectedModel.title} · {width} × {height} × {depth} cm</p>
@@ -289,7 +289,7 @@ export default function HomePage() {
                   <div className="quote-print-rule" />
                   <p className="quote-print-disclaimer">Document de préparation non contractuel. Montant calculé à partir des informations saisies par l’atelier. Les quantités, fournitures, délais, conditions de paiement et taxes éventuelles restent à confirmer avec le client. Ce document n’est ni une facture, ni une preuve d’acceptation, ni une commande.</p>
                   <footer className="quote-print-footer">SenMenuisier · Brouillon local non enregistré · {new Date().toLocaleDateString("fr-FR")}</footer>
-                </article>
+                </article></>}
               </section>
             </section>
           </>
