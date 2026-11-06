@@ -52,22 +52,24 @@ function EmptyState({ title, detail }: { title: string; detail: string }) {
 
 export default function HomePage() {
   const [section, setSection] = useState<Section>("catalogue");
-  const [width, setWidth] = useState("180");
-  const [height, setHeight] = useState("220");
-  const [depth, setDepth] = useState("60");
-  const [quantity, setQuantity] = useState("2");
-  const [unitPrice, setUnitPrice] = useState("22500");
-  const [waste, setWaste] = useState("12");
-  const [labor, setLabor] = useState("25000");
-  const [hardware, setHardware] = useState("8000");
-  const [finish, setFinish] = useState("15000");
-  const [overhead, setOverhead] = useState("5000");
-  const [margin, setMargin] = useState("30");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [depth, setDepth] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [unitPrice, setUnitPrice] = useState("");
+  const [waste, setWaste] = useState("");
+  const [labor, setLabor] = useState("");
+  const [hardware, setHardware] = useState("");
+  const [finish, setFinish] = useState("");
+  const [overhead, setOverhead] = useState("");
+  const [margin, setMargin] = useState("");
   const [estimateRequested, setEstimateRequested] = useState(false);
 
   const estimate = useMemo(() => {
-    const values = [quantity, unitPrice, waste, labor, hardware, finish, overhead, margin].map(Number);
-    if (values.some((v) => !Number.isFinite(v) || v < 0) || values[2] > 100 || values[7] >= 100) return null;
+    const rawValues = [quantity, unitPrice, waste, labor, hardware, finish, overhead, margin];
+    if (rawValues.some((value) => value.trim() === "")) return null;
+    const values = rawValues.map(Number);
+    if (values.some((v) => !Number.isFinite(v) || v < 0) || values[0] <= 0 || values[1] <= 0 || values[2] > 100 || values[7] >= 100) return null;
     try {
       return calculateWorkshopEstimate({
         materials: [{ name: "Panneau MDF 18 mm", quantity: values[0], unit: "panel", unitPrice: values[1], priceUnit: "panel" }],
