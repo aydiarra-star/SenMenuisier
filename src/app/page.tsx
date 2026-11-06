@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type { FormEvent } from "react";
 import Link from "next/link";
 import {
   Axe, Drill, Hammer, Layers, Paintbrush, Ruler, TreePine, Wrench, Plus, Trash2, MessageCircle, Phone, MapPin, CalendarClock, Check, CircleAlert
@@ -138,7 +139,7 @@ export default function HomePage() {
   );
   const today = new Date().toISOString().slice(0, 10);
   const dueFollowUps = workspace.contacts.filter((contact) => contact.nextFollowUp && contact.nextFollowUp <= today).length;
-  function addProductionJob(event: React.FormEvent<HTMLFormElement>) {
+  function addProductionJob(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!jobTitle.trim() || !jobClient.trim() || !jobDueDate) return;
     setWorkspace((current) => ({
@@ -152,7 +153,7 @@ export default function HomePage() {
     setJobTitle(""); setJobClient(""); setJobDueDate("");
     setWorkspaceNotice("Dossier ajouté et enregistré dans ce navigateur.");
   }
-  function addContact(event: React.FormEvent<HTMLFormElement>) {
+  function addContact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!contactName.trim() || !contactPhone.trim()) return;
     setWorkspace((current) => ({
@@ -167,7 +168,7 @@ export default function HomePage() {
     setContactConsent(false); setContactFollowUp("");
     setWorkspaceNotice("Contact ajouté et enregistré dans ce navigateur.");
   }
-  function addPriceObservation(event: React.FormEvent<HTMLFormElement>) {
+  function addPriceObservation(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const amount = Number(priceAmount);
     if (!priceItem.trim() || !priceQuality.trim() || !priceSource.trim() || !priceDate || !Number.isFinite(amount) || amount <= 0) return;
