@@ -266,7 +266,7 @@ export default function HomePage() {
 
         {section === "catalogue" && (
           <>
-            <div className="section-intro"><div><span className="section-kicker">01 / CONCEPTION & ESTIMATION</span><h2>Catalogue intelligent de meubles</h2></div><span className="local-only">Modèle de départ · non enregistré</span></div>
+            <div className="section-intro" id="selection"><div><span className="section-kicker">01 / CONCEPTION & ESTIMATION</span><h2>Catalogue intelligent de meubles</h2></div><span className="local-only">Modèle de départ · non enregistré</span></div>
             <div className="catalogue-layout">
               <section className="model-column">
                 <h3 className="subsection-heading"><Layers size={17} /> Modèles standardisés</h3>
