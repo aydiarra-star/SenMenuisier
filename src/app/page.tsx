@@ -1,9 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import {
   Axe, Drill, Hammer, Layers, Paintbrush, Ruler, TreePine,
-  ClipboardList, Wrench, Saw
+  Wrench
 } from "lucide-react";
 import { calculateWorkshopEstimate } from "@/lib/estimate";
 
@@ -15,7 +16,7 @@ const sections: { id: Section; label: string; short: string; icon: typeof Hammer
   { id: "atelier", label: "Pilotage atelier", short: "Atelier", icon: Ruler },
   { id: "materiaux", label: "Bois & matériaux", short: "Matériaux", icon: TreePine },
   { id: "clients", label: "Clients & relances", short: "Clients", icon: Drill },
-  { id: "roadmap", label: "Évolution", short: "Évolution", icon: Saw },
+  { id: "roadmap", label: "Évolution", short: "Évolution", icon: Axe },
 ];
 
 const crafts = [
@@ -23,6 +24,7 @@ const crafts = [
   { name: "Cuisine & agencement", detail: "Caissons, plans de travail et aménagement intérieur.", icon: Ruler },
   { name: "Bois massif", detail: "Essences locales, assemblages et finitions.", icon: TreePine },
   { name: "Panneaux & dérivés", detail: "MDF, contreplaqué, mélaminé et stratifié.", icon: Layers },
+  { name: "Finition & protection", detail: "Vernis, huiles, peintures et abrasifs.", icon: Paintbrush },
 ];
 
 const roadmap = [
@@ -88,7 +90,7 @@ export default function HomePage() {
     <div className="app-shell">
       <header className="topbar">
         <div className="topline">
-          <a className="brand" href="/" aria-label="SenMenuisier, accueil">
+          <Link className="brand" href="/" aria-label="SenMenuisier, accueil">
             <div className="brand-mark"><TreePine size={27} strokeWidth={1.8} /></div>
             <div>
               <div className="brand-name">SenMenuisier <span className="version">ATELIER OS</span></div>
@@ -168,7 +170,7 @@ export default function HomePage() {
         {section === "production" && <><div className="section-intro"><div><span className="section-kicker">02 / FABRICATION</span><h2>Chaque ouvrage, un dossier clair</h2></div></div><div className="feature-strip"><Hammer size={27}/><div><h3>Du lancement à la livraison</h3><p>Ordres de fabrication, opérations, responsables, échéances, photos, contrôle qualité et garantie seront réunis dans un dossier unique.</p></div></div><EmptyState title="Aucun dossier de fabrication connecté" detail="Les commandes de démonstration ont été retirées. Connectez un atelier et créez un vrai dossier pour commencer le suivi." /></>}
         {section === "atelier" && <><div className="section-intro"><div><span className="section-kicker">03 / PILOTAGE</span><h2>Les indicateurs doivent refléter votre atelier</h2></div></div><div className="metric-explain-grid"><article className="metric-explain"><Ruler/><h3>Délais</h3><p>Respect des dates promises, calculé sur les commandes réelles.</p></article><article className="metric-explain"><Axe/><h3>Rentabilité</h3><p>Marge des dossiers clôturés et suffisamment renseignés.</p></article><article className="metric-explain"><Wrench/><h3>Qualité</h3><p>Contrôles, reprises et garanties documentés.</p></article></div><EmptyState title="Score non calculé" detail="Aucun score arbitraire n’est affiché. Il sera calculé lorsque les données de production, de coûts et de qualité seront fiables." /></>}
         {section === "materiaux" && <><div className="section-intro"><div><span className="section-kicker">04 / MATIÈRES PREMIÈRES</span><h2>Le bois et chaque composant sous contrôle</h2></div></div><div className="craft-grid material-grid">{["Bois massif & essences locales","MDF, mélaminé & contreplaqué","Charnières, glissières & visserie","Colles, vernis & abrasifs"].map((item) => <article className="craft-card" key={item}><div className="craft-icon"><TreePine size={22}/></div><h3>{item}</h3></article>)}</div><EmptyState title="Référentiel matières à initialiser" detail="Les prix seront associés à une unité, une région, une date et une source vérifiable. Aucun prix indicatif ne sera présenté comme un tarif national." /></>}
-        {section === "clients" && <><div className="section-intro"><div><span className="section-kicker">05 / RELATION CLIENT</span><h2>Vos clients, vos échanges, vos engagements</h2></div></div><div className="feature-strip"><Drill size={27}/><div><h3>Un suivi respectueux et utile</h3><p>Contacts, consentements, historique, devis, commandes et rappels. Les relances WhatsApp resteront manuelles tant qu'aucune intégration autorisée n'est configurée.</p></div></div><EmptyState title="Carnet de clients vide" detail="Aucun faux client n’est affiché. Les fiches seront créées et sauvegardées après activation de l’identité et de la base de données." /></>}
+        {section === "clients" && <><div className="section-intro"><div><span className="section-kicker">05 / RELATION CLIENT</span><h2>Vos clients, vos échanges, vos engagements</h2></div></div><div className="feature-strip"><Drill size={27}/><div><h3>Un suivi respectueux et utile</h3><p>Contacts, consentements, historique, devis, commandes et rappels. Les relances WhatsApp resteront manuelles tant qu’aucune intégration autorisée n'est configurée.</p></div></div><EmptyState title="Carnet de clients vide" detail="Aucun faux client n’est affiché. Les fiches seront créées et sauvegardées après activation de l’identité et de la base de données." /></>}
         {section === "roadmap" && <><div className="section-intro"><div><span className="section-kicker">06 / CONSTRUCTION</span><h2>Les fondations avant les finitions</h2></div></div><div className="roadmap-list">{roadmap.map(([title, detail], index) => <article className="roadmap-row" key={title}><span className="roadmap-number">{String(index + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{detail}</p></div><span className="roadmap-status">À construire</span></article>)}</div></>}
       </main>
       <footer className="app-footer"><span>SenMenuisier</span><i>·</i> Le savoir-faire sénégalais, connecté au monde. <i>·</i> <span>Aperçu de conception</span></footer>
