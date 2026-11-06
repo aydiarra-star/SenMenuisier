@@ -2,29 +2,55 @@
 
 **Le savoir-faire sénégalais, connecté au monde.**
 
-SenMenuisier est le système opérationnel des ateliers de menuiserie au Sénégal. Il relie demande client, conception, devis, matériaux, fabrication, contrôle qualité, livraison et suivi du meuble.
+SenMenuisier est le système opérationnel des ateliers de menuiserie au Sénégal. L'ambition : relier la demande client, la conception, les devis, les matières, la fabrication, le contrôle qualité, la livraison et le suivi du meuble dans un outil simple à utiliser sur téléphone.
 
-Mission : faire passer la menuiserie sénégalaise du cahier papier à l'atelier intelligent.
+## Les deux expériences
 
-## Sources de vérité
-- Le cahier des charges SenMenuisier validé est la référence fonctionnelle.
-- Le fichier HTML fourni « SenMenuisier – OS de la Menuiserie » est la référence obligatoire de l'interface ; il ne doit pas être redessiné ni remplacé.
-- Les six espaces à conserver dans cet ordre : Catalogue Intelligent & calculateur paramétrique ; Production & Passeport QR ; Score Santé de l'atelier ; Base de Prix Nationale ; CRM Artisan & relances ; Feuille de Route.
-- Les exemples du prototype ne sont pas des données réelles : les remplacer par des données persistées et des états vides explicites.
+- **Application atelier** : aperçu du tableau de bord métier à la racine du site.
+- **Site public** : présentation du produit sur `/vitrine`.
 
-## Principes
-- Menuiserie uniquement en V1 ; français et wolof dès V1.
-- Application responsive mobile-first.
-- Architecture modulaire, monolithe modulaire au départ.
-- PostgreSQL/serveur comme source de vérité.
-- Isolation stricte des ateliers, permissions serveur et RLS.
-- Coûts, marges et notes internes invisibles aux clients.
-- Aucun faux paiement, faux message WhatsApp, fausse impression, faux QR vérifié, faux score ou faux succès.
+## Les six espaces de l'application
 
-## Architecture cible proposée
-Next.js, TypeScript, Tailwind CSS ; Supabase Auth, PostgreSQL et Storage ; Render pour l'hébergement applicatif après configuration ; Vitest et Playwright. C'est une cible de conception, pas la preuve que les services sont provisionnés.
+L'ordre est obligatoire et reprend le document de référence « SenMenuisier – OS de la Menuiserie » :
 
-## État initial vérifié le 30 octobre 2026
-Dépôt initial : branche main, un commit, README minimal, aucun frontend, backend, test, migration, configuration Supabase ou Render. La conception est préparée sur design/foundation-v1. Aucune application n'est déployée.
+1. Catalogue Intelligent
+2. Production & Passeport QR
+3. Score Santé de l'atelier
+4. Base de Prix Nationale
+5. CRM Artisan & Relances
+6. Feuille de Route
 
-Voir PROJECT_RULES.md et docs/CONCEPTION_V1.md. Chaque capacité sera qualifiée RÉELLE, PARTIELLE, DÉMO ou NON DISPONIBLE.
+Les pictogrammes visibles doivent représenter uniquement des outils, matières ou gestes de menuiserie : bois, panneaux, règle, marteau, scie, perceuse, finition et outillage d'atelier.
+
+## Principes non négociables
+
+- Menuiserie uniquement en V1 ; français par défaut, wolof à intégrer avec validation humaine.
+- Mobile-first, responsive, accessible et lisible dans un atelier.
+- PostgreSQL / serveur comme source de vérité dès l'activation du backend.
+- Isolation stricte des ateliers, permissions côté serveur et RLS.
+- Coûts, marges, paiements et notes internes protégés.
+- Aucun faux client, commande, stock, prix national, score, paiement, message WhatsApp ou QR.
+- Les dimensions seules ne produisent ni nomenclature ni plan de débit.
+- Aucune mise en production, dépense ou création de service externe sans validation explicite.
+
+## État technique au 6 novembre 2026
+
+- Branche de conception : `design/foundation-v1`.
+- Aperçu Render : https://senmenuisier-preview.onrender.com
+- Node.js fixé à `24.22.1` sur Render et dans GitHub Actions.
+- `package-lock.json` versionné pour rendre les installations reproductibles.
+- Contrôles automatisés : tests métier, TypeScript, lint et build.
+- Dernier audit npm : **0 vulnérabilité connue** dans l'arbre de dépendances audité.
+- Le tableau de bord et le site public sont des interfaces de prévisualisation, pas encore un logiciel métier connecté.
+
+## Ce qui n'est pas encore opérationnel
+
+Aucun backend atelier n'est encore provisionné pour SenMenuisier : authentification, base de données, RLS, stockage, invitations, CRM, stock, commandes, fabrication, QR et marketplace restent à construire et à tester. Le calculateur actuel est local et transparent ; il n'enregistre pas de devis et ne génère pas de plan de débit.
+
+## Documentation
+
+- `docs/PLAN_CONSTRUCTION_PRODUIT.md` — périmètre, architecture, données et critères de livraison.
+- `docs/ICONOGRAPHIE_MENUISERIE.md` — règles strictes pour les icônes.
+- `PROJECT_RULES.md` — règles du dépôt et de contribution.
+
+Le dépôt reste sur la branche d'aperçu. `main` n'a pas été modifiée et aucune mise en production n'a été lancée.
