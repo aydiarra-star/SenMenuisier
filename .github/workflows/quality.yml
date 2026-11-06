@@ -3,6 +3,7 @@ name: Qualité SenMenuisier
 on:
   push:
     branches:
+      - main
       - design/foundation-v1
       - "feature/**"
   pull_request:
