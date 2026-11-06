@@ -14,6 +14,8 @@ import OsSante from "./OsSante";
 import OsPrix from "./OsPrix";
 import OsCrm from "./OsCrm";
 import OsRoadmap from "./OsRoadmap";
+import OsPlanning from "./OsPlanning";
+import OsSettings from "./OsSettings";
 import OsExpressModal from "./OsExpressModal";
 import OsPasseportModal from "./OsPasseportModal";
 import type { OsSectionId } from "./types";
@@ -27,6 +29,8 @@ function navIdForSection(section: OsSectionId): string {
     case "prix": return "materiaux";
     case "crm": return "clients";
     case "roadmap": return "apprendre";
+    case "planning": return "planning";
+    case "settings": return "parametres";
     default: return "accueil";
   }
 }
@@ -250,6 +254,8 @@ export default function OsShell() {
           {os.section === "prix" ? <OsPrix /> : null}
           {os.section === "crm" ? <OsCrm /> : null}
           {os.section === "roadmap" ? <OsRoadmap /> : null}
+          {os.section === "planning" ? <OsPlanning /> : null}
+          {os.section === "settings" ? <OsSettings /> : null}
         </div>
 
         <footer className="os-footer">
