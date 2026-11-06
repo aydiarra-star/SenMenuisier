@@ -1,7 +1,7 @@
 name: Validate SenMenuisier
 on:
   pull_request:
-    branches: [main, design/foundation-v1]
+    branches: [main, design/foundation-v1, "backend/**"]
   push:
     branches: [main, "design/**", "backend/**"]
 permissions:
