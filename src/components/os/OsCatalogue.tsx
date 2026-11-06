@@ -7,6 +7,7 @@ import {
 import { calculateWorkshopEstimate } from "@/lib/estimate";
 import { averageVerifiedMdfPrice, findOsModel, osModels, woodEssences, woodFinishes } from "@/lib/os-models";
 import { useOs } from "./OsContext";
+import CutPlanTool from "./CutPlanTool";
 
 const money = (value: number) =>
   new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(Math.round(value)) + " FCFA";
@@ -244,6 +245,8 @@ export default function OsCatalogue() {
               </p>
             </div>
           </section>
+
+          <CutPlanTool />
 
           {/* Contrôle sur place */}
           <section className="os-card" aria-labelledby="measure-title">
