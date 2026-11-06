@@ -124,3 +124,11 @@ Un lot n'est terminé que si :
 ## Limites de cet audit
 
 Cet audit est fondé sur le code et la documentation accessibles dans le dépôt au commit indiqué. Il ne constitue pas une recette visuelle navigateur, un test de production, une validation Supabase/RLS en environnement réel ni une validation de paiement. Aucun PR n'est fusionné et aucun service externe n'est provisionné par ce document.
+
+## Chantiers déjà ouverts à réconcilier
+
+Au moment de cet audit, deux PR restent ouvertes et en brouillon :
+- PR #2 — identité, ateliers et isolation RLS, branche `backend/phase-2-identity`, basée sur `design/foundation-v1`. Les workflows Validate, Qualité et migrations Supabase ont terminé avec succès sur le commit contrôlé `daf032c9a4ac26901ab6e0c3ac0861053d841980`.
+- PR #3 — assistant de mensurations et calculateur, branche `design/measure-assistant-v1`, basée sur `backend/phase-2-identity`. Les workflows Validate, Qualité et migrations Supabase ont terminé avec succès sur le commit contrôlé `12081ced6e82cab1cd2586a471e40037be3c2ca6`.
+
+Ces succès CI valident les commits de ces branches, pas leur intégration dans `main), ni une base Supabase réelle. Les deux PR sont des brouillons, non fusionnés. Leur ordre de dépendance doit être conservé : socle d'identité/RLS, puis réconciliation de l'assistant de mesure et de l'interface. Avant toute fusion, comparer les changements avec la nouvelle interface de `main`, résoudre les conflits, puis rejouer toute la CI et les tests d'accès. Ne pas fusionner automatiquement.
