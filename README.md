@@ -35,8 +35,9 @@ Les pictogrammes visibles doivent représenter uniquement des outils, matières 
 
 ## État technique au 6 novembre 2026
 
-- Branche de conception : `design/foundation-v1`.
-- Aperçu Render : https://senmenuisier-preview.onrender.com
+- Branche canonique : `main` uniquement.
+- Prévisualisation Render de référence : https://senmenuisier-main-preview.onrender.com/#selection
+- Déploiement : Next.js en export statique vers `out/` ; le service Render existant doit publier ce dossier.
 - Node.js fixé à `24.22.1` sur Render et dans GitHub Actions.
 - `package-lock.json` versionné pour rendre les installations reproductibles.
 - Contrôles automatisés : tests métier, TypeScript, lint et build.
@@ -53,4 +54,4 @@ Aucun backend atelier n'est encore provisionné pour SenMenuisier : authentifica
 - `docs/ICONOGRAPHIE_MENUISERIE.md` — règles strictes pour les icônes.
 - `PROJECT_RULES.md` — règles du dépôt et de contribution.
 
-Le dépôt reste sur la branche d'aperçu. `main` n'a pas été modifiée et aucune mise en production n'a été lancée.
+Le dépôt est consolidé sur `main`. La prévisualisation Render principale est la seule destination prévue. L'Auto-Deploy a été désactivé temporairement pendant la consolidation ; aucune publication n'est déclenchée tant que la compilation et la configuration Render ne sont pas validées.
