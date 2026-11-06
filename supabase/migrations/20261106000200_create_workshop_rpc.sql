@@ -1,5 +1,5 @@
--- Complete atelier creation as one trusted transaction.
--- The client cannot directly INSERT a workshop or manufacture its owner membership.
+-- Create a workshop and its owner membership atomically.
+-- The public RPC is SECURITY INVOKER; the narrow implementation is private.
 begin;
 
 drop policy if exists workshops_insert_creator on public.workshops;
@@ -8,7 +8,7 @@ revoke insert on public.workshops from authenticated;
 revoke update on public.workshops from authenticated;
 grant update (name, city, country_code, timezone, updated_at) on public.workshops to authenticated;
 
-create or replace function public.create_workshop(
+create or replace function private.create_workshop(
   p_name text,
   p_city text
 )
@@ -45,6 +45,24 @@ begin
 
   return v_workshop_id;
 end;
+$$;
+
+revoke all on function private.create_workshop(text, text) from public, anon;
+grant execute on function private.create_workshop(text, text) to authenticated;
+
+-- PostgREST exposes this narrow wrapper through the public schema.
+-- It does not gain elevated privileges; the private implementation performs
+-- the atomic write after checking auth.uid().
+create or replace function public.create_workshop(
+  p_name text,
+  p_city text
+)
+returns uuid
+language sql
+security invoker
+set search_path = ''
+as $$
+  select private.create_workshop(p_name, p_city);
 $$;
 
 revoke all on function public.create_workshop(text, text) from public, anon;
