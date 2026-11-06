@@ -6,8 +6,9 @@ import {
   Axe, Drill, Hammer, Layers, Paintbrush, Ruler, TreePine, Wrench
 } from "lucide-react";
 import { calculateWorkshopEstimate } from "@/lib/estimate";
+import { productSpaces as sections } from "@/lib/product-spaces";
 
-type Section = "catalogue" | "production" | "sante" | "prix" | "crm" | "roadmap";
+type Section = (typeof sections)[number]["id"];
 type WorkshopModel = {
   id: string;
   title: string;
@@ -18,14 +19,7 @@ type WorkshopModel = {
   icon: typeof Hammer;
 };
 
-const sections: { id: Section; label: string; icon: typeof Hammer }[] = [
-  { id: "catalogue", label: "1. Catalogue Intelligent", icon: Layers },
-  { id: "production", label: "2. Production & Passeport QR", icon: Hammer },
-  { id: "sante", label: "3. Score Santé", icon: Ruler },
-  { id: "prix", label: "4. Base de Prix Nationale", icon: TreePine },
-  { id: "crm", label: "5. CRM Artisan & Relances", icon: Drill },
-  { id: "roadmap", label: "6. Feuille de Route", icon: Axe },
-];
+
 
 const models: WorkshopModel[] = [
   { id: "armoire", title: "Armoire 3 Portes", short: "Rangements et tiroirs bas", width: 180, height: 220, depth: 60, icon: Layers },
