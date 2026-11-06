@@ -19,6 +19,8 @@ const sections: { id: Section; label: string; short: string; icon: typeof Hammer
   { id: "roadmap", label: "Évolution", short: "Évolution", icon: Axe },
 ];
 
+const sheetMaterials = ["MDF standard 18 mm", "MDF hydrofuge 18 mm", "Contreplaqué 18 mm", "Panneau mélaminé 18 mm"] as const;
+
 const crafts = [
   { name: "Mobilier sur mesure", detail: "Armoires, lits, tables, bureaux et rangements.", icon: Layers },
   { name: "Cuisine & agencement", detail: "Caissons, plans de travail et aménagement intérieur.", icon: Ruler },
@@ -55,6 +57,7 @@ export default function HomePage() {
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
   const [depth, setDepth] = useState("");
+  const [material, setMaterial] = useState("");
   const [quantity, setQuantity] = useState("");
   const [unitPrice, setUnitPrice] = useState("");
   const [waste, setWaste] = useState("");
@@ -67,12 +70,12 @@ export default function HomePage() {
 
   const estimate = useMemo(() => {
     const rawValues = [quantity, unitPrice, waste, labor, hardware, finish, overhead, margin];
-    if (rawValues.some((value) => value.trim() === "")) return null;
+    if (material.trim() === "" || rawValues.some((value) => value.trim() === "")) return null;
     const values = rawValues.map(Number);
     if (values.some((v) => !Number.isFinite(v) || v < 0) || values[0] <= 0 || values[1] <= 0 || values[2] > 100 || values[7] >= 100) return null;
     try {
       return calculateWorkshopEstimate({
-        materials: [{ name: "Panneau MDF 18 mm", quantity: values[0], unit: "panel", unitPrice: values[1], priceUnit: "panel" }],
+        materials: [{ name: material, quantity: values[0], unit: "panel", unitPrice: values[1], priceUnit: "panel" }],
         wasteRate: values[2] / 100,
         laborCost: values[3],
         hardwareCost: values[4],
@@ -83,7 +86,7 @@ export default function HomePage() {
     } catch {
       return null;
     }
-  }, [quantity, unitPrice, waste, labor, hardware, finish, overhead, margin]);
+  }, [material, quantity, unitPrice, waste, labor, hardware, finish, overhead, margin]);
 
   const active = sections.find((item) => item.id === section)!;
   const ActiveIcon = active.icon;
