@@ -32,6 +32,17 @@ describe("calculateWorkshopEstimate", () => {
     expect(() => calculateWorkshopEstimate({ ...base, targetGrossMarginRate: 1 })).toThrow(/marge cible/);
   });
 
+  it("rejects an estimate without any material line", () => {
+    expect(() => calculateWorkshopEstimate({ ...base, materials: [] })).toThrow(/au moins une ligne de matière/);
+  });
+
+  it("rejects values that overflow the calculation", () => {
+    expect(() => calculateWorkshopEstimate({
+      ...base,
+      materials: [{ name: "MDF", quantity: 1e308, unit: "panel", unitPrice: 1e308, priceUnit: "panel" }],
+    })).toThrow(/dépasse la capacité de calcul/);
+  });
+
   it("does not claim to produce a cut list", () => {
     expect(calculateWorkshopEstimate(base).assumptions.at(-1)).toContain("Aucun plan de débit");
   });
