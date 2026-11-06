@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Scissors, RotateCw, AlertTriangle } from "lucide-react";
+import { Scissors, RotateCw, AlertTriangle, Download } from "lucide-react";
 import { calculateShelfCutPlan, type CutPart } from "@/lib/cut-plan";
 
 const money = (value: number) => new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 }).format(value);
@@ -31,6 +31,29 @@ export default function CutPlanTool() {
   function updatePart(id: string, patch: Partial<CutPart>) {
     setParts((current) => current.map((part) => part.id === id ? { ...part, ...patch } : part));
     setEnabled(false);
+  }
+
+  function exportCutList() {
+    if (!plan || plan.placements.length === 0) return;
+    const rows = [
+      ["Panneau", "Pièce", "Largeur (mm)", "Hauteur (mm)", "X depuis rive (mm)", "Y depuis rive (mm)", "Rotation"],
+      ...plan.placements.map((item) => [
+        String(item.panel), item.label, String(item.widthMm), String(item.heightMm),
+        String(item.xMm), String(item.yMm), item.rotated ? "Oui" : "Non",
+      ]),
+    ];
+    const csv = "\\uFEFF" + rows.map((row) =>
+      row.map((value) => '"' + value.replace(/"/g, '""') + '"').join(";")
+    ).join("\\r\\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "senmenuisier-liste-debit.csv";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
   }
 
   function addPart() {
@@ -78,14 +101,21 @@ export default function CutPlanTool() {
           </div>
           {plan.warnings.map((warning) => <p key={warning} className="os-note" role="alert"><AlertTriangle size={13} /> {warning}</p>)}
           {plan.placements.length > 0 ? (
-            <div className="os-table" style={{ marginTop: 10 }}>
+            <>
+              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
+                <button type="button" className="os-mini" onClick={exportCutList}>
+                  <Download size={13} /> Exporter la liste de débit (CSV)
+                </button>
+              </div>
+              <div className="os-table" style={{ marginTop: 10 }}>
               {plan.placements.map((item) => (
                 <div className="os-table-row" key={item.partId}>
                   <span>{item.label} · panneau {item.panel} · {item.xMm},{item.yMm} mm{item.rotated ? " · tournée" : ""}</span>
                   <b>{item.widthMm} × {item.heightMm}</b>
                 </div>
               ))}
-            </div>
+              </div>
+            </>
           ) : null}
           <p className="os-note" style={{ marginTop: 10 }}>Disposition par rangées (heuristique). La surface restante n&apos;est pas garantie réutilisable. Vérifiez le sens du fil, les défauts, les chants, les serre-joints et l&apos;ordre de coupe avant débit.</p>
         </div>
