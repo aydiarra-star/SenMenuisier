@@ -1,4 +1,4 @@
-export type OsSectionId = "accueil" | "catalogue" | "production" | "sante" | "prix" | "crm" | "roadmap";
+export type OsSectionId = "accueil" | "catalogue" | "production" | "sante" | "prix" | "crm" | "roadmap" | "planning" | "settings";
 
 export type OsNotify = (message: string) => void;
 
