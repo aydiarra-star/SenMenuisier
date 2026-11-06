@@ -1,4 +1,4 @@
-import type { WorkshopRole } from "./types";
+import type { WorkshopRole } from "./schemas";
 
 export const workshopPermissions = [
   "workshop.read",
