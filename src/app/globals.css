@@ -17,7 +17,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #D4A3
 .version{display:inline-block;margin-left:5px;padding:4px 7px;border-radius:6px;background:var(--forest);color:white;font:800 8px 'Plus Jakarta Sans';letter-spacing:.09em;vertical-align:middle}
 .top-actions{display:flex;align-items:center;gap:12px}
 .workspace-chip{display:flex;align-items:center;gap:10px;padding:9px 13px;border:1px solid var(--line);border-radius:13px;background:#fffaf4}
-.wood-dot{width:9px;height:9px;border-radius:2px;background:var(--forest);box-shadow:0 0 0 4px #295f4e18;transform:rotate(45deg)}
+.wood-dot{flex:none;color:var(--forest);filter:drop-shadow(0 2px 3px #295f4e22)}
 .workspace-chip b,.workspace-chip small{display:block}
 .workspace-chip b{font-size:10px;color:#392719}
 .workspace-chip small{margin-top:3px;font-size:9px;color:var(--muted)}
