@@ -50,14 +50,20 @@ Les permissions de coût restent séparées des permissions métier : `quotes.co
 7. Aucune clé secrète/service-role dans le navigateur ou une variable `NEXT_PUBLIC_*`.
 8. Les fichiers sont privés par défaut ; le chemin et les politiques Storage doivent contrôler l'atelier et l'autorisation, pas seulement le préfixe fourni par le navigateur.
 
-## Invitations
+## Invitations — cible, non opérationnelle à ce stade
 
-- Création réservée au propriétaire ou à un gestionnaire explicitement autorisé.
-- Le serveur génère un jeton aléatoire à haute entropie ; seule son empreinte est stockée.
+Les règles ci-dessous décrivent le futur flux ; elles ne constituent pas une fonctionnalité disponible dans cette livraison.
+
+- Aucun endpoint/RPC de création, d'envoi, d'acceptation ou de révocation d'invitation n'est encore livré.
+- Aucune invitation ne doit être créée directement depuis le navigateur ou par écriture dans la table.
+- Lors de la livraison du flux, la création sera réservée au propriétaire ; un gestionnaire ne pourra inviter que si une délégation explicite et administrable existe.
+- Le serveur générera un jeton aléatoire à haute entropie ; seule son empreinte sera stockée.
 - Expiration courte, usage unique, révocation possible et rôle borné à la matrice autorisée.
-- L'acceptation exige une session authentifiée correspondant à l'adresse invitée.
-- Le navigateur ne peut ni choisir son atelier, ni s'attribuer un rôle, ni modifier une délégation.
-- Chaque création, acceptation, révocation et changement de rôle est journalisé.
+- L'acceptation exigera une session authentifiée correspondant à l'adresse invitée.
+- Le navigateur ne pourra ni choisir son atelier, ni s'attribuer un rôle, ni modifier une délégation.
+- Chaque création, acceptation, révocation et changement de rôle sera journalisé.
+
+De même, l'administration des délégations de permissions n'est pas encore livrée : les écritures directes restent fermées et aucun gestionnaire ne peut s'accorder le droit members.manage ou un droit financier.
 
 ## Parcours de validation obligatoires
 
