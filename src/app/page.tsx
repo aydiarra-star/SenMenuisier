@@ -73,6 +73,9 @@ export default function HomePage() {
   const [height, setHeight] = useState("220");
   const [depth, setDepth] = useState("60");
   const [measurementsVerified, setMeasurementsVerified] = useState(false);
+  const [boardThickness, setBoardThickness] = useState("18 mm");
+  const [edgeBanding, setEdgeBanding] = useState("PVC 2 mm");
+  const [workshopNotes, setWorkshopNotes] = useState("");
   const [material, setMaterial] = useState("");
   const [finishType, setFinishType] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -196,6 +199,22 @@ export default function HomePage() {
                   {measurementsVerified ? "Les trois cotes sont marquées comme vérifiées pour cette session. Toute modification annulera cette confirmation." : "Relevé non confirmé · vérifiez les dimensions sur place."}
                 </p>
                 <div className="material-callout"><Ruler size={19} /><div><b>Mesures de référence</b><p>Ces dimensions ne génèrent pas automatiquement une liste de pièces. Le débit doit être établi à partir d’une nomenclature validée, des épaisseurs et du sens du fil.</p></div></div>
+                <section className="furniture-sheet" aria-labelledby="furniture-sheet-title">
+                  <div className="panel-heading"><div><span className="section-kicker">FICHE DE L’OUVRAGE</span><h2 id="furniture-sheet-title">Préciser la fabrication</h2></div><Layers size={21} /></div>
+                  <p className="panel-lead">Complétez les choix techniques avec le client avant de préparer le devis et le travail en atelier.</p>
+                  <div className="cost-fields furniture-fields">
+                    <label>Épaisseur principale<select value={boardThickness} onChange={(event) => setBoardThickness(event.target.value)}><option>12 mm</option><option>15 mm</option><option>18 mm</option><option>22 mm</option><option>25 mm</option><option>À confirmer</option></select></label>
+                    <label>Chant / bordure<select value={edgeBanding} onChange={(event) => setEdgeBanding(event.target.value)}><option>PVC 0,8 mm</option><option>PVC 2 mm</option><option>Bois massif</option><option>Sans chant</option><option>À confirmer</option></select></label>
+                    <label className="wide-field">Consignes et contraintes de l’atelier<textarea rows={3} value={workshopNotes} onChange={(event) => setWorkshopNotes(event.target.value)} placeholder="Ex. : mur irrégulier, prise à gauche, finition à valider avec le client…" /></label>
+                  </div>
+                  <div className="furniture-summary">
+                    <div className="furniture-summary-head"><b>Récapitulatif de l’ouvrage</b><span>Brouillon local</span></div>
+                    <p><strong>{selectedModel.title}</strong> · {width} × {height} × {depth} cm</p>
+                    <p>{material || "Matériau à choisir"} · {boardThickness} · {finishType || "Finition à choisir"} · {edgeBanding}</p>
+                    {workshopNotes.trim() && <p className="furniture-notes">{workshopNotes}</p>}
+                    <small>Ce récapitulatif n’est pas encore enregistré ni partagé avec un client. La liste de débit reste à établir et à valider par le menuisier.</small>
+                  </div>
+                </section>
               </section>
             </div>
 
