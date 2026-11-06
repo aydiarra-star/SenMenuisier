@@ -78,12 +78,11 @@ select 1 / case when (
   select count(*) from public.workshops where id = :'workshop_a'::uuid
 ) = 1 then 1 else 0 end;
 -- A manager's UPDATE policy must affect zero rows.
-select 1 / case when (
-  with changed as (
-    update public.workshops set name = 'Modification interdite'
-    where id = :'workshop_a'::uuid returning id
-  ) select count(*) from changed
-) = 0 then 1 else 0 end;
+with changed as (
+  update public.workshops set name = 'Modification interdite'
+  where id = :'workshop_a'::uuid returning id
+)
+select 1 / case when count(*) = 0 then 1 else 0 end from changed;
 reset role;
 
 -- Client roles cannot write memberships or forge audit history directly.
