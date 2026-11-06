@@ -1,12 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { FormEvent } from "react";
 import Link from "next/link";
 import {
-  Axe, Drill, Hammer, Layers, Paintbrush, Ruler, TreePine, Wrench
+  Drill, Hammer, Layers, Paintbrush, Ruler, TreePine, Plus, Trash2, MessageCircle, Phone, CalendarClock, Check, CircleAlert
 } from "lucide-react";
 import { calculateWorkshopEstimate } from "@/lib/estimate";
 import { productSpaces as sections } from "@/lib/product-spaces";
+import {
+  calculateOperationalHealth, emptyWorkspace, nextProductionStatus, productionStages,
+  type WorkshopWorkspace, type ProductionStatus,
+} from "@/lib/workshop-workspace";
 
 type Section = (typeof sections)[number]["id"];
 type WorkshopModel = {
@@ -55,17 +60,6 @@ const roadmap = [
 const money = (value: number) =>
   new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(Math.round(value)) + " FCFA";
 
-function EmptyState({ title, detail }: { title: string; detail: string }) {
-  return (
-    <div className="empty-state">
-      <div className="empty-woodmark" aria-hidden="true"><Layers size={25} /></div>
-      <h3>{title}</h3>
-      <p>{detail}</p>
-      <span className="status-note">Données réelles requises · aucune démonstration fictive</span>
-    </div>
-  );
-}
-
 export default function HomePage() {
   const [section, setSection] = useState<Section>("catalogue");
   const [modelId, setModelId] = useState("armoire");
@@ -83,6 +77,111 @@ export default function HomePage() {
   const [overhead, setOverhead] = useState("");
   const [margin, setMargin] = useState("");
   const [estimateRequested, setEstimateRequested] = useState(false);
+  const [workspace, setWorkspace] = useState<WorkshopWorkspace>(emptyWorkspace);
+  const [workspaceLoaded, setWorkspaceLoaded] = useState(false);
+  const [jobTitle, setJobTitle] = useState("");
+  const [jobClient, setJobClient] = useState("");
+  const [jobDueDate, setJobDueDate] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [contactCity, setContactCity] = useState("");
+  const [contactNotes, setContactNotes] = useState("");
+  const [contactConsent, setContactConsent] = useState(false);
+  const [contactFollowUp, setContactFollowUp] = useState("");
+  const [priceCategory, setPriceCategory] = useState("Bois & panneaux");
+  const [priceItem, setPriceItem] = useState("");
+  const [priceRegion, setPriceRegion] = useState("Dakar");
+  const [priceQuality, setPriceQuality] = useState("");
+  const [priceUnit, setPriceUnit] = useState("unité");
+  const [priceAmount, setPriceAmount] = useState("");
+  const [priceSource, setPriceSource] = useState("");
+  const [priceDate, setPriceDate] = useState(new Date().toISOString().slice(0, 10));
+  const [workspaceNotice, setWorkspaceNotice] = useState("");
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem("senmenuisier-workspace-v1");
+      if (saved) {
+        const parsed = JSON.parse(saved) as Partial<WorkshopWorkspace>;
+        setWorkspace({
+          production: Array.isArray(parsed.production) ? parsed.production : [],
+          contacts: Array.isArray(parsed.contacts) ? parsed.contacts : [],
+          prices: Array.isArray(parsed.prices) ? parsed.prices : [],
+        });
+      }
+    } catch {
+      setWorkspaceNotice("Les données locales n’ont pas pu être lues. Vérifiez le stockage de ce navigateur.");
+    } finally {
+      setWorkspaceLoaded(true);
+    }
+  }, []);
+  useEffect(() => {
+    if (!workspaceLoaded) return;
+    try {
+      window.localStorage.setItem("senmenuisier-workspace-v1", JSON.stringify(workspace));
+    } catch {
+      setWorkspaceNotice("Enregistrement local impossible : espace de stockage indisponible.");
+    }
+  }, [workspace, workspaceLoaded]);
+  const operationalHealth = useMemo(
+    () => calculateOperationalHealth(workspace.production),
+    [workspace.production],
+  );
+  const today = new Date().toISOString().slice(0, 10);
+  const dueFollowUps = workspace.contacts.filter((contact) => contact.nextFollowUp && contact.nextFollowUp <= today).length;
+  function addProductionJob(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!jobTitle.trim() || !jobClient.trim() || !jobDueDate) return;
+    setWorkspace((current) => ({
+      ...current,
+      production: [{
+        id: crypto.randomUUID(), title: jobTitle.trim(), client: jobClient.trim(),
+        dueDate: jobDueDate, status: "preparation" as ProductionStatus,
+        createdAt: new Date().toISOString(),
+      }, ...current.production],
+    }));
+    setJobTitle(""); setJobClient(""); setJobDueDate("");
+    setWorkspaceNotice("Dossier ajouté et enregistré dans ce navigateur.");
+  }
+  function addContact(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!contactName.trim() || !contactPhone.trim()) return;
+    setWorkspace((current) => ({
+      ...current,
+      contacts: [{
+        id: crypto.randomUUID(), name: contactName.trim(), phone: contactPhone.trim(),
+        city: contactCity.trim(), notes: contactNotes.trim(), consentWhatsApp: contactConsent,
+        nextFollowUp: contactFollowUp, createdAt: new Date().toISOString(),
+      }, ...current.contacts],
+    }));
+    setContactName(""); setContactPhone(""); setContactCity(""); setContactNotes("");
+    setContactConsent(false); setContactFollowUp("");
+    setWorkspaceNotice("Contact ajouté et enregistré dans ce navigateur.");
+  }
+  function addPriceObservation(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const amount = Number(priceAmount);
+    if (!priceItem.trim() || !priceQuality.trim() || !priceSource.trim() || !priceDate || !Number.isFinite(amount) || amount <= 0) return;
+    setWorkspace((current) => ({
+      ...current,
+      prices: [{
+        id: crypto.randomUUID(), category: priceCategory, item: priceItem.trim(),
+        region: priceRegion, quality: priceQuality.trim(), unit: priceUnit,
+        price: amount, source: priceSource.trim(), observedAt: priceDate, status: "pending" as const,
+      }, ...current.prices],
+    }));
+    setPriceItem(""); setPriceQuality(""); setPriceAmount(""); setPriceSource("");
+    setWorkspaceNotice("Observation ajoutée en attente de vérification.");
+  }
+  function advanceProduction(id: string, status: ProductionStatus) {
+    const next = nextProductionStatus(status);
+    setWorkspace((current) => ({
+      ...current,
+      production: current.production.map((job) => job.id === id
+        ? { ...job, status: next, ...(next === "livre" ? { completedAt: new Date().toISOString() } : {}) }
+        : job),
+    }));
+  }
+
 
   const selectedModel = models.find((model) => model.id === modelId) ?? models[0];
   const active = sections.find((item) => item.id === section)!;
@@ -213,55 +312,109 @@ export default function HomePage() {
 
         {section === "production" && (
           <>
-            <div className="section-intro"><div><span className="section-kicker">02 / SUIVI DE FABRICATION</span><h2>Production & passeport numérique QR</h2></div></div>
-            <div className="production-steps">
-              {[
-                ["Préparation", "Dossier, mesures et nomenclature", Ruler],
-                ["Débit", "Panneaux, pièces et chutes", Axe],
-                ["Assemblage", "Montage et ajustements", Hammer],
-                ["Finition", "Ponçage, huile, vernis ou laque", Paintbrush],
-                ["Contrôle", "Vérification avant livraison", Wrench],
-              ].map(([title, detail, Icon]) => {
-                const StepIcon = Icon as typeof Hammer;
-                return <article className="production-step" key={title as string}><StepIcon size={22} /><h3>{title as string}</h3><p>{detail as string}</p></article>;
-              })}
+            <div className="section-intro"><div><span className="section-kicker">02 / SUIVI DE FABRICATION</span><h2>Production & suivi des ouvrages</h2></div><span className="local-only">{workspace.production.length} dossier(s)</span></div>
+            <div className="feature-strip"><Hammer size={27} /><div><h3>Un suivi concret, étape par étape</h3><p>Créez un dossier, affectez-le à une étape, faites avancer la fabrication et clôturez-le à la livraison. Les données sont actuellement conservées sur cet appareil, pas encore synchronisées entre les membres.</p></div></div>
+            <section className="panel module-panel">
+              <div className="panel-heading"><div><span className="section-kicker">NOUVEL OUVRAGE</span><h2>Créer un dossier de fabrication</h2></div><Plus size={22} /></div>
+              <form className="module-form" onSubmit={addProductionJob}>
+                <label>Nom de l’ouvrage<input required maxLength={100} value={jobTitle} onChange={(event) => setJobTitle(event.target.value)} placeholder="Ex. Armoire 3 portes" /></label>
+                <label>Client<input required maxLength={100} value={jobClient} onChange={(event) => setJobClient(event.target.value)} placeholder="Nom du client" /></label>
+                <label>Date promise<input required type="date" min={today} value={jobDueDate} onChange={(event) => setJobDueDate(event.target.value)} /></label>
+                <button className="wood-button" type="submit"><Plus size={16} /> Créer le dossier</button>
+              </form>
+            </section>
+            <div className="section-intro"><div><span className="section-kicker">TABLEAU DE FABRICATION</span><h2>Ouvrages en cours et livrés</h2></div></div>
+            <div className="module-list">
+              {workspace.production.length === 0 ? <div className="module-empty"><Hammer size={24} /><b>Aucun dossier pour le moment</b><p>Créez le premier ouvrage ci-dessus. Aucun faux dossier n’est préchargé.</p></div> :
+                workspace.production.map((job) => {
+                  const stageIndex = productionStages.findIndex((stage) => stage.id === job.status);
+                  const stage = productionStages[stageIndex];
+                  return <article className="module-record" key={job.id}>
+                    <div className="record-main"><span className="section-kicker">DOSSIER · {job.id.slice(0, 8).toUpperCase()}</span><h3>{job.title}</h3><p>{job.client} · Livraison prévue le {job.dueDate}</p><div className="stage-track">{productionStages.map((item, index) => <span key={item.id} className={index <= stageIndex ? "stage-dot done" : "stage-dot"} title={item.label} />)}</div><small>Étape : {stage.label}</small></div>
+                    <div className="record-actions">{job.status !== "livre" ? <button type="button" className="wood-button" onClick={() => advanceProduction(job.id, job.status)}>Étape suivante <span aria-hidden="true">→</span></button> : <span className="record-status"><Check size={15} /> Livré</span>}<button type="button" className="icon-action" aria-label={`Supprimer le dossier ${job.title}`} onClick={() => setWorkspace((current) => ({ ...current, production: current.production.filter((item) => item.id !== job.id) }))}><Trash2 size={17} /></button></div>
+                  </article>;
+                })}
             </div>
-            <div className="feature-strip"><Hammer size={27} /><div><h3>Un dossier par ouvrage</h3><p>Les commandes réelles réuniront les tâches, responsables, dates, photos, contrôles, livraison et garantie. Le passeport QR sera généré uniquement après création d’un ouvrage enregistré.</p></div></div>
-            <EmptyState title="Aucun dossier de fabrication connecté" detail="Les commandes fictives de l’ancienne maquette ont été retirées. Les passeports QR ne seront pas simulés : ils seront liés à un meuble réel et à des informations publiques autorisées." />
+            <div className="feature-strip"><CircleAlert size={24} /><div><h3>Passeport QR : étape suivante</h3><p>Le suivi de fabrication est actif localement. Le QR public sera activé après connexion à une base sécurisée afin de ne jamais exposer les coordonnées du client ou les informations internes de l’atelier.</p></div></div>
           </>
         )}
 
         {section === "sante" && (
           <>
-            <div className="section-intro"><div><span className="section-kicker">03 / PILOTAGE D’ATELIER</span><h2>Score Santé de l’atelier</h2></div><span className="local-only">Score non calculé</span></div>
-            <div className="metric-explain-grid">
-              <article className="metric-explain"><Ruler /><h3>Respect des délais</h3><p>Calculé sur les dates promises et les livraisons réellement clôturées.</p></article>
-              <article className="metric-explain"><Axe /><h3>Marge moyenne</h3><p>Calculée sur les coûts et prix de vente des dossiers complets.</p></article>
-              <article className="metric-explain"><Hammer /><h3>Recouvrement clients</h3><p>Suivi des paiements enregistrés et des soldes dus.</p></article>
-              <article className="metric-explain"><TreePine /><h3>Rotation des stocks</h3><p>Évaluée à partir des entrées, sorties et inventaires.</p></article>
+            <div className="section-intro"><div><span className="section-kicker">03 / PILOTAGE D’ATELIER</span><h2>Score Santé opérationnel</h2></div><span className="local-only">Calcul transparent · sans données financières</span></div>
+            <div className="health-score-panel panel">
+              <div><span className="section-kicker">RESPECT DES DÉLAIS</span><strong>{operationalHealth.score === null ? "—" : `${operationalHealth.score}/100`}</strong><p>{operationalHealth.score === null ? `Il faut au moins 3 ouvrages livrés pour calculer un indicateur fiable. ${operationalHealth.completedCount}/3 actuellement.` : `Calcul basé sur ${operationalHealth.completedCount} ouvrages livrés et leurs dates promises.`}</p></div>
+              <div className="health-meter"><span style={{ width: `${operationalHealth.score ?? 0}%` }} /></div>
+              {operationalHealth.score !== null && <small>{operationalHealth.onTimeCount} livraison(s) dans les délais sur {operationalHealth.completedCount}.</small>}
             </div>
-            <EmptyState title="Score Santé indisponible pour le moment" detail="Aucun 82/100 fictif n’est affiché. Le score et les conseils seront calculés lorsque les données de production, de coûts, de paiements et de stock seront fiables." />
+            <div className="metric-explain-grid">
+              <article className="metric-explain"><Ruler /><h3>Ouvrages livrés</h3><p>{operationalHealth.completedCount} dossier(s) clôturé(s), sur la base des enregistrements de cet appareil.</p></article>
+              <article className="metric-explain"><CalendarClock /><h3>Retards en cours</h3><p>{operationalHealth.overdueCount} dossier(s) non livré(s) dont la date promise est dépassée.</p></article>
+              <article className="metric-explain"><Drill /><h3>Clients suivis</h3><p>{workspace.contacts.length} contact(s) dans le carnet de l’atelier.</p></article>
+              <article className="metric-explain"><MessageCircle /><h3>Relances à faire</h3><p>{dueFollowUps} contact(s) avec une date de suivi arrivée ou dépassée.</p></article>
+            </div>
+            <div className="feature-strip"><CircleAlert size={24} /><div><h3>Lecture honnête des indicateurs</h3><p>Le score affiché mesure uniquement la ponctualité des livraisons. Il n’intègre ni marge, ni encaissements, ni dépenses, ni stock : ces données nécessitent un système sécurisé et des droits propriétaire. Aucun score n’est inventé en l’absence d’échantillon suffisant.</p></div></div>
           </>
         )}
 
         {section === "prix" && (
           <>
-            <div className="section-intro"><div><span className="section-kicker">04 / INTELLIGENCE COLLECTIVE DU MARCHÉ</span><h2>Base de Prix Nationale (FCFA)</h2></div><span className="local-only">Aucune cotation validée</span></div>
-            <div className="craft-grid price-category-grid">
-              <article className="craft-card"><div className="craft-icon"><TreePine size={23} /></div><div><h3>Bois & panneaux</h3><p>Essences, MDF, contreplaqué, mélaminé et formats.</p></div></article>
-              <article className="craft-card"><div className="craft-icon"><Wrench size={23} /></div><div><h3>Quincaillerie</h3><p>Charnières, glissières, vis, poignées et accessoires.</p></div></article>
-              <article className="craft-card"><div className="craft-icon"><Paintbrush size={23} /></div><div><h3>Finitions & consommables</h3><p>Colles, abrasifs, huiles, vernis et peintures.</p></div></article>
-              <article className="craft-card"><div className="craft-icon"><Ruler size={23} /></div><div><h3>Prix de vente d’ouvrages</h3><p>Fourchettes observées par type de meuble et région.</p></div></article>
+            <div className="section-intro"><div><span className="section-kicker">04 / INTELLIGENCE COLLECTIVE DU MARCHÉ</span><h2>Base de Prix documentée (FCFA)</h2></div><span className="local-only">{workspace.prices.length} observation(s)</span></div>
+            <div className="feature-strip"><TreePine size={25} /><div><h3>Des prix sourcés, jamais inventés</h3><p>Chaque relevé doit contenir la région, l’unité, la qualité, la date et une source. Les observations restent en attente tant qu’elles ne sont pas vérifiées.</p></div></div>
+            <section className="panel module-panel">
+              <div className="panel-heading"><div><span className="section-kicker">NOUVELLE OBSERVATION</span><h2>Ajouter un prix constaté</h2></div><Plus size={22} /></div>
+              <form className="module-form price-form" onSubmit={addPriceObservation}>
+                <label>Catégorie<select value={priceCategory} onChange={(event) => setPriceCategory(event.target.value)}><option>Bois & panneaux</option><option>Quincaillerie</option><option>Finitions & consommables</option><option>Prix de vente d’ouvrages</option></select></label>
+                <label>Matériau / article<input required maxLength={100} value={priceItem} onChange={(event) => setPriceItem(event.target.value)} placeholder="Ex. MDF 18 mm" /></label>
+                <label>Région<select value={priceRegion} onChange={(event) => setPriceRegion(event.target.value)}>{["Dakar","Thiès","Diourbel","Saint-Louis","Louga","Fatick","Kaolack","Kaffrine","Tambacounda","Kédougou","Kolda","Sédhiou","Ziguinchor","Matam"].map((region) => <option key={region}>{region}</option>)}</select></label>
+                <label>Qualité / référence<input required maxLength={100} value={priceQuality} onChange={(event) => setPriceQuality(event.target.value)} placeholder="Épaisseur, essence, gamme…" /></label>
+                <label>Unité<select value={priceUnit} onChange={(event) => setPriceUnit(event.target.value)}><option>unité</option><option>panneau</option><option>m²</option><option>mètre linéaire</option><option>litre</option><option>kg</option><option>lot</option></select></label>
+                <label>Prix constaté (FCFA)<input required type="number" min="1" step="1" value={priceAmount} onChange={(event) => setPriceAmount(event.target.value)} /></label>
+                <label>Source vérifiable<input required maxLength={160} value={priceSource} onChange={(event) => setPriceSource(event.target.value)} placeholder="Fournisseur, facture ou relevé" /></label>
+                <label>Date du relevé<input required type="date" max={today} value={priceDate} onChange={(event) => setPriceDate(event.target.value)} /></label>
+                <button className="wood-button" type="submit"><Plus size={16} /> Ajouter l’observation</button>
+              </form>
+            </section>
+            <div className="section-intro"><div><span className="section-kicker">RELEVÉS SAISIS</span><h2>Historique des observations</h2></div></div>
+            <div className="module-list">
+              {workspace.prices.length === 0 ? <div className="module-empty"><TreePine size={24} /><b>Aucun prix enregistré</b><p>Ajoutez un prix réellement constaté. Aucune valeur nationale n’est préchargée.</p></div> :
+                workspace.prices.map((item) => <article className="module-record" key={item.id}>
+                  <div className="record-main"><span className="section-kicker">{item.category} · {item.region}</span><h3>{item.item} — {money(item.price)} / {item.unit}</h3><p>{item.quality} · Source : {item.source} · Relevé du {item.observedAt}</p><span className={item.status === "validated" ? "record-status" : "record-pending"}>{item.status === "validated" ? "Vérifié sur cet appareil" : "En attente de vérification"}</span></div>
+                  <div className="record-actions">{item.status === "pending" && <button type="button" className="wood-button" onClick={() => setWorkspace((current) => ({ ...current, prices: current.prices.map((entry) => entry.id === item.id ? { ...entry, status: "validated" as const } : entry) }))}>Marquer vérifié</button>}<button type="button" className="icon-action" aria-label={`Supprimer l’observation ${item.item}`} onClick={() => setWorkspace((current) => ({ ...current, prices: current.prices.filter((entry) => entry.id !== item.id) }))}><Trash2 size={17} /></button></div>
+                </article>)}
             </div>
-            <EmptyState title="Référentiel de prix à constituer" detail="Chaque observation devra indiquer la région, l’unité, la date, la source et la qualité du matériau. Aucun prix ne sera présenté comme national sans données suffisantes et vérifiées." />
+            <div className="feature-strip"><CircleAlert size={24} /><div><h3>Important : pas encore une base nationale publique</h3><p>Les relevés sont locaux à ce navigateur. « Vérifié » signifie seulement que vous avez contrôlé la source sur cet appareil. La publication nationale nécessitera une modération serveur et une comparaison des relevés régionaux.</p></div></div>
           </>
         )}
 
         {section === "crm" && (
           <>
-            <div className="section-intro"><div><span className="section-kicker">05 / FIDÉLISATION CLIENT</span><h2>CRM Artisan & carnet de clients</h2></div></div>
-            <div className="feature-strip"><Drill size={27} /><div><h3>Une relation client simple et suivie</h3><p>Contacts, consentements, historique, devis, commandes, préférences et rappels. Les relances WhatsApp resteront manuelles tant qu’aucune intégration autorisée n’est configurée.</p></div></div>
-            <EmptyState title="Carnet de clients vide" detail="Aucun nom, numéro ou achat fictif n’est conservé. Les fiches clients seront créées dans l’espace privé de chaque atelier." />
+            <div className="section-intro"><div><span className="section-kicker">05 / FIDÉLISATION CLIENT</span><h2>CRM Artisan & carnet de clients</h2></div><span className="local-only">{workspace.contacts.length} contact(s)</span></div>
+            <div className="feature-strip"><Drill size={27} /><div><h3>Un carnet simple, utile et respectueux du consentement</h3><p>Enregistrez les coordonnées, la ville, les notes et la prochaine relance. WhatsApp s’ouvre avec un message prérempli seulement si le client a accepté les relances.</p></div></div>
+            <section className="panel module-panel">
+              <div className="panel-heading"><div><span className="section-kicker">NOUVEAU CONTACT</span><h2>Ajouter un client</h2></div><Plus size={22} /></div>
+              <form className="module-form" onSubmit={addContact}>
+                <label>Nom du client<input required maxLength={100} value={contactName} onChange={(event) => setContactName(event.target.value)} placeholder="Nom et prénom" /></label>
+                <label>Téléphone<input required type="tel" maxLength={24} value={contactPhone} onChange={(event) => setContactPhone(event.target.value)} placeholder="+221 77 000 00 00" /></label>
+                <label>Ville<input maxLength={80} value={contactCity} onChange={(event) => setContactCity(event.target.value)} placeholder="Ex. Dakar" /></label>
+                <label>Prochaine relance<input type="date" value={contactFollowUp} onChange={(event) => setContactFollowUp(event.target.value)} /></label>
+                <label className="module-wide">Notes<textarea maxLength={500} rows={3} value={contactNotes} onChange={(event) => setContactNotes(event.target.value)} placeholder="Préférences, demande, historique utile…" /></label>
+                <label className="consent-check"><input type="checkbox" checked={contactConsent} onChange={(event) => setContactConsent(event.target.checked)} /> Le client accepte les relances WhatsApp.</label>
+                <button className="wood-button" type="submit"><Plus size={16} /> Enregistrer le contact</button>
+              </form>
+            </section>
+            <div className="section-intro"><div><span className="section-kicker">CARNET DE CLIENTS</span><h2>Contacts et relances</h2></div></div>
+            <div className="module-list">
+              {workspace.contacts.length === 0 ? <div className="module-empty"><Drill size={24} /><b>Aucun client enregistré</b><p>Ajoutez un client pour démarrer votre carnet. Les données restent sur cet appareil.</p></div> :
+                workspace.contacts.map((contact) => {
+                  const digits = contact.phone.replace(/[^0-9]/g, "");
+                  const waMessage = encodeURIComponent(`Bonjour ${contact.name}, je vous contacte au sujet de votre projet de menuiserie.`);
+                  return <article className="module-record" key={contact.id}>
+                    <div className="record-main"><span className="section-kicker">{contact.city || "Ville non renseignée"}</span><h3>{contact.name}</h3><p>{contact.phone}{contact.nextFollowUp ? ` · Relance : ${contact.nextFollowUp}` : ""}</p>{contact.notes && <p>{contact.notes}</p>}<small>{contact.consentWhatsApp ? "Consentement WhatsApp enregistré" : "Pas de consentement WhatsApp"}</small></div>
+                    <div className="record-actions"><a className="icon-action" href={`tel:${contact.phone}`} aria-label={`Appeler ${contact.name}`}><Phone size={17} /></a>{contact.consentWhatsApp && digits.length >= 8 && <a className="icon-action" href={`https://wa.me/${digits}?text=${waMessage}`} target="_blank" rel="noreferrer" aria-label={`Ouvrir WhatsApp pour ${contact.name}`}><MessageCircle size={17} /></a>}<button type="button" className="icon-action" aria-label={`Supprimer ${contact.name}`} onClick={() => setWorkspace((current) => ({ ...current, contacts: current.contacts.filter((item) => item.id !== contact.id) }))}><Trash2 size={17} /></button></div>
+                  </article>;
+                })}
+            </div>
           </>
         )}
 
@@ -293,6 +446,7 @@ export default function HomePage() {
           </p>
         </section>
       </main>
+      {workspaceNotice && <div className="workspace-toast" role="status">{workspaceNotice}<button type="button" onClick={() => setWorkspaceNotice("")} aria-label="Fermer">×</button></div>}
       <footer className="app-footer"><span>SenMenuisier</span><i>·</i> Le savoir-faire sénégalais, connecté au monde. <i>·</i> Aperçu de conception</footer>
     </div>
   );
