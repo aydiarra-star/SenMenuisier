@@ -82,6 +82,13 @@ export function OsProvider({ children }: { children: ReactNode }) {
   const [material, setMaterial] = useState("Chêne");
   const [finish, setFinish] = useState("Vernis mat");
 
+  /* Lien direct : /?vue=crm ouvre l’espace demandé sans écran intermédiaire. */
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("vue");
+    const allowed: OsSectionId[] = ["catalogue", "production", "sante", "prix", "crm", "roadmap"];
+    if (requested && (allowed as string[]).includes(requested)) setSection(requested as OsSectionId);
+  }, []);
+
   /* Lecture du stockage local : les données déjà enregistrées sont réutilisées. */
   useEffect(() => {
     try {

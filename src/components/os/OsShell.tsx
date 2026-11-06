@@ -77,6 +77,10 @@ export default function OsShell() {
   }, [query, os.workspace.production, os.workspace.contacts, os]);
 
   function openItem(item: OsNavItem, current?: string) {
+    if (item.id === "accueil") {
+      os.go("accueil");
+      return;
+    }
     const isActive = item.id === (current ?? activeNav);
     if (isActive) {
       os.go("accueil");

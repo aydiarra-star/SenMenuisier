@@ -66,3 +66,16 @@ Branche en conception et développement. Pas prête pour production. Aucun merge
 - Commits : `6a8c933` et `9b7f49d`.
 - Cet ajustement isolé ne signifie pas que l'interface complète est désormais identique au HTML : les modules Production, Score Santé, Base de Prix, CRM et Feuille de Route restent à comparer et à connecter selon la recette.
 - Aucun workflow ni statut CI n'a été retourné pour le dernier commit contrôlé. Aucun nouveau déploiement Render n'est listé ; l'aperçu reste sur le commit antérieur confirmé.
+
+## Écran d’entrée — interface « OS de la menuiserie »
+
+- La racine `/` affiche désormais l’interface de la capture fournie : rail de navigation,
+  entête (recherche, thème, notifications, profil) et accueil complet (bandeau, six
+  catégories, quatre modèles, conception paramétrique, estimation rapide, suivi de
+  production, plaque QR, bannière essences, encart atelier, proverbe).
+- Les six espaces documentés restent accessibles depuis le rail ; leur contenu métier
+  existant est conservé et réorganisé sous cette nouvelle enveloppe.
+- L’ancienne page de conception est conservée à l’identique sur `/espace-atelier/`.
+- Devis Express et Passeport QR sont réels : devis enregistré (numéro, lignes, acompte),
+  QR encodé localement, champs publiés limités, devis et étiquette imprimables.
+- Détail et limites : `docs/ECRAN_ENTREE_OS.md`.
