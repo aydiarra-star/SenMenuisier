@@ -243,6 +243,19 @@ export default function HomePage() {
                 <div><span>Coût de fabrication estimé</span><b>{estimate ? money(estimate.totalCost) : "À renseigner"}</b></div>
                 <div><span>Prix de vente cible</span><b>{estimate ? money(estimate.targetSellingPrice) : "À renseigner"}</b></div>
               </div>
+              {estimate && (
+                <div className="estimate-breakdown" aria-label="Détail du calcul de fabrication">
+                  <div className="estimate-breakdown-heading"><b>Comprendre le calcul</b><span>Montants saisis par l’atelier</span></div>
+                  <div><span>Matières</span><b>{money(estimate.materialSubtotal)}</b></div>
+                  <div><span>Pertes matière ({(Number(waste) || 0).toLocaleString("fr-FR")} %)</span><b>{money(estimate.wasteCost)}</b></div>
+                  <div><span>Main-d’œuvre</span><b>{money(estimate.laborCost)}</b></div>
+                  <div><span>Quincaillerie</span><b>{money(estimate.hardwareCost)}</b></div>
+                  <div><span>Finition</span><b>{money(estimate.finishCost)}</b></div>
+                  <div><span>Charges atelier</span><b>{money(estimate.overheadCost)}</b></div>
+                  <div className="estimate-breakdown-total"><span>Coût total</span><b>{money(estimate.totalCost)}</b></div>
+                  <div className="estimate-breakdown-margin"><span>Marge brute cible sur prix de vente ({(Number(margin) || 0).toLocaleString("fr-FR")} %)</span><b>{money(estimate.targetSellingPrice - estimate.totalCost)}</b></div>
+                </div>
+              )}
               <p className="calculation-note">Cette première estimation calcule une ligne de matière et les coûts complémentaires saisis. Elle ne constitue pas encore un plan de débit ni une nomenclature multi-pièces complète.</p>
               <button className="wood-button" type="button" onClick={() => setEstimateRequested(true)}>Vérifier les hypothèses de calcul</button>
               {estimateRequested && <ul className="assumptions">{estimate?.assumptions.map((item) => <li key={item}>{item}</li>) ?? <li>Complétez tous les champs, choisissez une matière et une finition pour obtenir une estimation.</li>}</ul>}
