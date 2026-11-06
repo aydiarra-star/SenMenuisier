@@ -87,6 +87,10 @@ export default function HomePage() {
   const [overhead, setOverhead] = useState("");
   const [margin, setMargin] = useState("");
   const [estimateRequested, setEstimateRequested] = useState(false);
+  const [clientName, setClientName] = useState("");
+  const [clientContact, setClientContact] = useState("");
+  const [deliveryTarget, setDeliveryTarget] = useState("");
+  const [quotePrepared, setQuotePrepared] = useState(false);
 
   const selectedModel = models.find((model) => model.id === modelId) ?? models[0];
   const active = sections.find((item) => item.id === section)!;
@@ -241,6 +245,27 @@ export default function HomePage() {
               <p className="calculation-note">Cette première estimation calcule une ligne de matière et les coûts complémentaires saisis. Elle ne constitue pas encore un plan de débit ni une nomenclature multi-pièces complète.</p>
               <button className="wood-button" type="button" onClick={() => setEstimateRequested(true)}>Vérifier les hypothèses de calcul</button>
               {estimateRequested && <ul className="assumptions">{estimate?.assumptions.map((item) => <li key={item}>{item}</li>) ?? <li>Complétez tous les champs, choisissez une matière et une finition pour obtenir une estimation.</li>}</ul>}
+              <section className="quote-draft" aria-labelledby="quote-draft-title">
+                <div className="panel-heading"><div><span className="section-kicker">ÉTAPE SUIVANTE</span><h2 id="quote-draft-title">Préparer le devis client</h2></div><Hammer size={21} /></div>
+                <p className="panel-lead">Le devis ne peut être préparé qu’après contrôle des mesures et saisie des coûts. Il reste un brouillon tant qu’il n’est pas enregistré et envoyé par l’atelier.</p>
+                <div className="cost-fields quote-fields">
+                  <label>Nom du client<input value={clientName} onChange={(event) => { setClientName(event.target.value); setQuotePrepared(false); }} placeholder="Nom et prénom" /></label>
+                  <label>Téléphone / WhatsApp<input type="tel" value={clientContact} onChange={(event) => { setClientContact(event.target.value); setQuotePrepared(false); }} placeholder="Numéro communiqué par le client" /></label>
+                  <label className="wide-field">Date souhaitée de livraison<input type="date" value={deliveryTarget} onChange={(event) => { setDeliveryTarget(event.target.value); setQuotePrepared(false); }} /></label>
+                </div>
+                <button className="wood-button quote-prepare-button" type="button" disabled={!estimate || !measurementsVerified || !clientName.trim()} onClick={() => setQuotePrepared(true)}>Préparer l’aperçu du devis</button>
+                {!measurementsVerified && <p className="quote-hint">Confirmez d’abord les mesures sur place.</p>}
+                {measurementsVerified && !estimate && <p className="quote-hint">Complétez les coûts pour calculer un montant fiable.</p>}
+                {quotePrepared && estimate && <div className="quote-preview" role="status">
+                  <div className="furniture-summary-head"><b>Aperçu du devis · brouillon</b><span>Non envoyé</span></div>
+                  <p><strong>Client :</strong> {clientName} {clientContact.trim() ? "· " + clientContact : ""}</p>
+                  <p><strong>Ouvrage :</strong> {selectedModel.title} · {width} × {height} × {depth} cm</p>
+                  <p><strong>Fiche technique :</strong> {material} · {boardThickness} · {finishType} · {edgeBanding}</p>
+                  <p><strong>Prix cible indicatif :</strong> {money(estimate.targetSellingPrice)}</p>
+                  <p><strong>Livraison souhaitée :</strong> {deliveryTarget || "À convenir avec le client"}</p>
+                  <small>Avant envoi : vérifier les quantités, la portée du devis, les conditions de paiement et la date avec le client. L’acceptation devra être enregistrée pour ouvrir une commande.</small>
+                </div>}
+              </section>
             </section>
           </>
         )}
