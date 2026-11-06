@@ -62,7 +62,7 @@ Règles impératives :
 - Les permissions ne viennent jamais du navigateur ni des métadonnées utilisateur modifiables.
 - Chaque requête vérifie l'appartenance active à l'atelier demandé et l'accès à la ligne concernée.
 - Les réponses publiques, exports, PDF, QR et vues client utilisent une liste blanche de champs.
-- Les clients ne sont pas des membres internes d'un atelier.
+- Les clients ne sont pas des membres internes d'un atelier. L'administrateur de plateforme est un rôle global séparé : il gère l'exploitation technique et la modération, mais n'a aucun accès implicite aux dossiers, clients, coûts ou finances privés des ateliers ; tout accès exceptionnel de support doit être temporaire, justifié, approuvé et audité.
 - Tester systématiquement deux ateliers A/B pour les lectures, créations, mises à jour, suppressions, fichiers et exports.
 
 ## Plan de consolidation par lots
