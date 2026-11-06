@@ -53,7 +53,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #D4A3
 .dimension-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .dimension-grid label,.cost-fields label{display:block;font-size:9px;font-weight:800;color:#604630}
 .dimension-grid label span{float:right;color:var(--wood);font-size:8px}
-.dimension-grid input,.cost-fields input{display:block;width:100%;margin-top:7px;min-width:0;padding:11px 10px;border:1px solid var(--line);border-radius:10px;background:#fbf8f2;color:#392719;font-size:12px;font-weight:700}
+.dimension-grid input,.cost-fields input,.cost-fields select{display:block;width:100%;margin-top:7px;min-width:0;padding:11px 10px;border:1px solid var(--line);border-radius:10px;background:#fbf8f2;color:#392719;font-size:12px;font-weight:700}
 .material-callout{display:flex;gap:12px;margin-top:18px;padding:14px;border-radius:13px;background:#295f4e0d;border:1px solid #295f4e20;color:var(--forest)}
 .material-callout div{min-width:0}
 .material-callout b{font-size:10px}
@@ -62,7 +62,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #D4A3
 .dimension-foot span{font-size:8px;color:var(--wood);background:#f4efe7;padding:6px 8px;border-radius:6px}
 .cost-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
 .cost-fields label{font-size:8px}
-.cost-fields input{font-size:11px;padding:10px}
+.cost-fields input,.cost-fields select{font-size:11px;padding:10px}.wide-field{grid-column:1/-1}
 .estimate-result{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:17px}
 .estimate-result>div{padding:14px;border-radius:13px;background:var(--forest);color:#fff}
 .estimate-result span{display:block;font-size:8px;color:#d9e4dc}
