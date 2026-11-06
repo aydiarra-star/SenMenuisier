@@ -11,6 +11,7 @@ import { productionStages } from "@/lib/workshop-workspace";
 import { neutralQrPayload } from "@/lib/qr";
 import { useOs } from "./OsContext";
 import QrCode from "./QrCode";
+import Furniture3DPreview from "./Furniture3DPreview";
 
 const money = (value: number) =>
   new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(Math.round(value)) + " FCFA";
@@ -177,11 +178,13 @@ export default function OsHome() {
             </div>
 
             <div className="os-config-grid">
-              <div className="os-draft" aria-label="Croquis coté du meuble">
-                <DraftSketch
+              <div className="os-draft" aria-label="Aperçu volumétrique du meuble">
+                <Furniture3DPreview
                   width={os.dimensions.width}
                   height={os.dimensions.height}
                   depth={os.dimensions.depth}
+                  material={os.material}
+                  finish={os.finish}
                 />
               </div>
 
@@ -258,7 +261,7 @@ export default function OsHome() {
                   </button>
                 </div>
                 <p className="os-config-note">
-                  Croquis coté indicatif — la vue 3D et le plan de débit ne sont pas encore disponibles.
+                  Aperçu volumétrique interactif indicatif. Le plan de débit et les assemblages techniques détaillés restent à intégrer.
                 </p>
               </div>
             </div>
