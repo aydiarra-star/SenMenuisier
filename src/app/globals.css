@@ -216,3 +216,15 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #D4A3
 .furniture-summary .furniture-notes{white-space:pre-wrap}
 .furniture-summary small{display:block;margin-top:10px;padding-top:9px;border-top:1px solid #ddcdbb;color:var(--muted);font-size:8px;line-height:1.6}
 @media(max-width:620px){.furniture-sheet{padding:14px}.furniture-fields{grid-template-columns:1fr}.furniture-fields .wide-field{grid-column:auto}.furniture-summary{padding:12px}}
+
+/* Client quote draft */
+.quote-draft{margin-top:22px;padding:18px;border:1px solid #d8c8b6;border-radius:16px;background:#fffdf9}
+.quote-fields{margin-top:14px}
+.quote-prepare-button{margin-top:14px}
+.quote-prepare-button:disabled{opacity:.45;cursor:not-allowed}
+.quote-hint{margin:8px 0 0;color:#8a5b31;font-size:8px;line-height:1.5}
+.quote-preview{margin-top:15px;padding:15px;border:1px solid #d9c9b7;border-radius:12px;background:#f7f2eb}
+.quote-preview p{margin:8px 0 0;color:#604630;font-size:9px;line-height:1.6;overflow-wrap:anywhere}
+.quote-preview p strong{color:#392719}
+.quote-preview small{display:block;margin-top:11px;padding-top:10px;border-top:1px solid #ddcdbb;color:var(--muted);font-size:8px;line-height:1.65}
+@media(max-width:620px){.quote-draft{padding:14px}.quote-fields{grid-template-columns:1fr}.quote-fields .wide-field{grid-column:auto}}
