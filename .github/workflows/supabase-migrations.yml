@@ -77,7 +77,7 @@ jobs:
         env:
           PGPASSWORD: senmenuisier_ci
         run: |
-          for migration in supabase/migrations/20261106000100_identity_workshops_rls.sql supabase/migrations/20261106000200_create_workshop_rpc.sql supabase/migrations/20261106000300_audit_and_write_hardening.sql; do
+          for migration in supabase/migrations/20261106000100_identity_workshops_rls.sql supabase/migrations/20261106000200_create_workshop_rpc.sql supabase/migrations/20261106000300_audit_and_write_hardening.sql supabase/migrations/20261106000400_profile_column_hardening.sql; do
             echo "Application de $migration"
             psql -h localhost -U postgres -d senmenuisier_test -v ON_ERROR_STOP=1 -f "$migration"
           done
