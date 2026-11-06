@@ -1,0 +1,32 @@
+name: Vérification des migrations Supabase
+
+on:
+  push:
+    branches:
+      - backend/**
+  pull_request:
+    branches:
+      - main
+      - design/foundation-v1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: senmenuisier-supabase-migrations-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  migration-contract:
+    name: Contrat sécurité SQL (statique)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
+      - name: Vérifier les invariants des migrations
+        run: node scripts/check-supabase-migrations.mjs
