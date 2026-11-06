@@ -200,3 +200,19 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #D4A3
 .public-footer-brand{font:900 13px 'Cabinet Grotesk';color:var(--wood)}
 @media(max-width:900px){.public-hero{grid-template-columns:1fr;gap:32px;padding-top:28px}.timber-visual{min-height:310px;max-width:620px;width:100%;margin:auto}.public-workshop{grid-template-columns:auto minmax(0,1fr)}.public-workshop>.public-primary{grid-column:2;justify-self:start}}
 @media(max-width:620px){.site-link{font-size:8px}.public-header{padding:13px 15px;align-items:flex-start}.public-header nav{gap:10px;flex-wrap:wrap;justify-content:flex-end}.public-header nav a{font-size:8px}.public-header nav .public-header-cta{padding:9px 10px}.public-brand .brand-mark{width:42px;height:42px}.public-brand b{font-size:18px}.public-brand small{font-size:7px}.public-hero{padding:25px 17px 42px;gap:26px}.public-hero h1{font-size:39px}.public-hero-copy>p{font-size:11px}.public-actions{align-items:stretch;flex-direction:column}.public-primary,.public-secondary{width:100%;padding:13px}.timber-visual{min-height:260px;border-radius:19px}.timber-board{height:65px;padding:0 14px}.timber-board span{font-size:6px}.public-section{padding:24px 15px 46px}.public-section-heading h2{font-size:27px}.public-feature-grid{grid-template-columns:1fr;gap:10px}.public-feature{min-height:0;padding:18px}.public-workshop{margin:0 15px 45px;padding:19px;grid-template-columns:1fr;gap:14px}.public-workshop>.public-primary{grid-column:auto;justify-self:stretch}.public-footer{padding:18px 15px 24px;justify-content:center;text-align:center;flex-direction:column;gap:7px}}
+
+/* Furniture specification sheet */
+.furniture-sheet{margin-top:19px;padding:18px;border:1px solid var(--line);border-radius:16px;background:#fffdf9}
+.furniture-sheet .panel-heading{margin-bottom:7px}
+.furniture-fields{margin-top:14px}
+.furniture-fields textarea{display:block;width:100%;min-height:82px;resize:vertical;margin-top:7px;padding:11px 10px;border:1px solid var(--line);border-radius:10px;background:#fbf8f2;color:#392719;font:500 11px/1.6 inherit}
+.furniture-fields textarea:focus,.furniture-fields input:focus,.furniture-fields select:focus{outline:2px solid #295f4e55;outline-offset:1px}
+.furniture-summary{margin-top:14px;padding:14px;border-radius:12px;background:#f4efe7;border:1px solid #e4d8c8}
+.furniture-summary-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.furniture-summary-head b{font:800 11px 'Cabinet Grotesk';color:#392719}
+.furniture-summary-head span{font-size:7px;font-weight:900;color:var(--wood);text-transform:uppercase;letter-spacing:.08em}
+.furniture-summary p{margin:8px 0 0;color:#604630;font-size:9px;line-height:1.55}
+.furniture-summary p strong{color:#392719}
+.furniture-summary .furniture-notes{white-space:pre-wrap}
+.furniture-summary small{display:block;margin-top:10px;padding-top:9px;border-top:1px solid #ddcdbb;color:var(--muted);font-size:8px;line-height:1.6}
+@media(max-width:620px){.furniture-sheet{padding:14px}.furniture-fields{grid-template-columns:1fr}.furniture-fields .wide-field{grid-column:auto}.furniture-summary{padding:12px}}
