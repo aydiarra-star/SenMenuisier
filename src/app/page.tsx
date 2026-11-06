@@ -166,7 +166,7 @@ export default function HomePage() {
               <section className="model-column">
                 <h3 className="subsection-heading"><Layers size={17} /> Modèles standardisés</h3>
                 <div className="model-list">
-                  {models.map(({ id, title, short, icon: Icon, ...dimensions }) => (
+                  {models.map(({ id, title, short, icon: Icon }) => (
                     <button type="button" key={id} onClick={() => chooseModel(models.find((item) => item.id === id)!)} className={modelId === id ? "model-card selected" : "model-card"}>
                       <span className="craft-icon"><Icon size={24} /></span>
                       <span className="model-copy"><b>{title}</b><small>{short}</small></span>
