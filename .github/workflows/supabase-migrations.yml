@@ -30,3 +30,59 @@ jobs:
           node-version: 24.22.1
       - name: Vérifier les invariants des migrations
         run: node scripts/check-supabase-migrations.mjs
+
+  postgres-rls:
+    name: Tests PostgreSQL RLS (base éphémère)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: senmenuisier_ci
+          POSTGRES_DB: senmenuisier_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d senmenuisier_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+      - name: Installer le client PostgreSQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+      - name: Préparer les rôles et les objets Auth simulés
+        env:
+          PGPASSWORD: senmenuisier_ci
+        run: |
+          psql -h localhost -U postgres -d senmenuisier_test -v ON_ERROR_STOP=1 <<'SQL'
+          create role anon nologin;
+          create role authenticated nologin;
+          create schema auth;
+          create table auth.users (id uuid primary key);
+          create function auth.uid()
+          returns uuid
+          language sql
+          stable
+          as $$
+            select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid
+          $$;
+          create schema extensions;
+          SQL
+      - name: Appliquer les migrations sur PostgreSQL éphémère
+        env:
+          PGPASSWORD: senmenuisier_ci
+        run: |
+          for migration in supabase/migrations/20261106000100_identity_workshops_rls.sql supabase/migrations/20261106000200_create_workshop_rpc.sql supabase/migrations/20261106000300_audit_and_write_hardening.sql; do
+            echo "Application de $migration"
+            psql -h localhost -U postgres -d senmenuisier_test -v ON_ERROR_STOP=1 -f "$migration"
+          done
+      - name: Tester l'isolation et les rôles
+        env:
+          PGPASSWORD: senmenuisier_ci
+        run: |
+          psql -h localhost -U postgres -d senmenuisier_test -v ON_ERROR_STOP=1 -f supabase/tests/identity_rls.integration.sql
