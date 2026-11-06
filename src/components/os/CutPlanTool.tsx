@@ -87,7 +87,7 @@ export default function CutPlanTool() {
               ))}
             </div>
           ) : null}
-          <p className="os-note" style={{ marginTop: 10 }}>Disposition par rangées (heuristique). La surface restante n&apos;est pas garantie réutilisable. Vérifiez le sens du fil, les défauts, les chants, les serre-joints et l'ordre de coupe avant débit.</p>
+          <p className="os-note" style={{ marginTop: 10 }}>Disposition par rangées (heuristique). La surface restante n&apos;est pas garantie réutilisable. Vérifiez le sens du fil, les défauts, les chants, les serre-joints et l&apos;ordre de coupe avant débit.</p>
         </div>
       ) : null}
     </section>
