@@ -1,0 +1,40 @@
+name: Qualité SenMenuisier
+
+on:
+  push:
+    branches:
+      - design/foundation-v1
+  pull_request:
+    branches:
+      - main
+      - design/foundation-v1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: senmenuisier-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Tests, types, lint et build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Installer les dépendances
+        run: npm install
+      - name: Tests métier
+        run: npm test
+      - name: Vérifier TypeScript
+        run: npm run typecheck
+      - name: Vérifier le code
+        run: npm run lint
+      - name: Construire l'application
+        run: npm run build
