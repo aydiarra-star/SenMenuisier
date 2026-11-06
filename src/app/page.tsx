@@ -271,6 +271,27 @@ export default function HomePage() {
             <div className="roadmap-list">{roadmap.map(([title, detail, status], index) => <article className="roadmap-row" key={title}><span className="roadmap-number">{String(index + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{detail}</p></div><span className="roadmap-status">{status}</span></article>)}</div>
           </>
         )}
+        <section className="premium-preview" aria-labelledby="premium-preview-title" style={{ marginTop: 34, padding: 22, borderRadius: 22, background: "var(--paper)", border: "1px solid var(--line)", boxShadow: "var(--shadow)" }}>
+          <div className="section-intro" style={{ marginTop: 0 }}>
+            <div>
+              <span className="section-kicker">APERÇU VISUEL · INTERFACE PREMIUM</span>
+              <h2 id="premium-preview-title">L’interface premium SenMenuisier</h2>
+            </div>
+            <span className="local-only">Image conservée telle quelle</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center", padding: "10px 0 4px" }}>
+            <img
+              src="/interface-premium.png"
+              alt="Aperçu de l’interface premium SenMenuisier : accueil, meubles, portes, fenêtres, escaliers, conception, matériaux, production, estimation, livraison, passeport QR, clients et planning."
+              width={1024}
+              height={1536}
+              style={{ display: "block", width: "100%", maxWidth: 520, height: "auto", borderRadius: 18, border: "1px solid var(--line)", boxShadow: "0 18px 48px -28px #3b291b40" }}
+            />
+          </div>
+          <p style={{ margin: "12px 0 0", textAlign: "center", fontSize: 9, color: "var(--muted)" }}>
+            Visuel fourni, conservé sans retouche — l’interface SenMenuisier reste inchangée.
+          </p>
+        </section>
       </main>
       <footer className="app-footer"><span>SenMenuisier</span><i>·</i> Le savoir-faire sénégalais, connecté au monde. <i>·</i> Aperçu de conception</footer>
     </div>
