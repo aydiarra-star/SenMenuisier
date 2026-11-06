@@ -55,18 +55,33 @@ export function calculateWorkshopEstimate(input: EstimateInput): EstimateResult 
     throw new Error("La marge cible doit être comprise entre 0 inclus et 1 exclu.");
   }
 
+  if (input.materials.length === 0) {
+    throw new Error("Ajoutez au moins une ligne de matière avant de calculer le devis.");
+  }
+
   const materialSubtotal = input.materials.reduce((sum, line) => {
+    if (!line.name.trim()) throw new Error("Chaque matière doit avoir un nom.");
     nonNegative(line.quantity, "Quantité matière");
     nonNegative(line.unitPrice, "Prix matière");
+    if (line.quantity <= 0) throw new Error("La quantité matière doit être supérieure à zéro.");
     if (line.unit !== line.priceUnit) {
       throw new Error(`Unité incompatible pour « ${line.name} » : quantité en ${line.unit}, prix en ${line.priceUnit}.`);
     }
-    return sum + line.quantity * line.unitPrice;
+    const lineTotal = line.quantity * line.unitPrice;
+    if (!Number.isFinite(lineTotal) || !Number.isFinite(sum + lineTotal)) {
+      throw new Error("Le montant des matières dépasse la capacité de calcul.");
+    }
+    return sum + lineTotal;
   }, 0);
 
   const wasteCost = materialSubtotal * input.wasteRate;
   const totalCost = materialSubtotal + wasteCost + input.laborCost
     + input.hardwareCost + input.finishCost + input.overheadCost;
+  const targetSellingPrice = totalCost / (1 - input.targetGrossMarginRate);
+
+  if (![wasteCost, totalCost, targetSellingPrice].every(Number.isFinite)) {
+    throw new Error("Le montant calculé dépasse la capacité de calcul. Vérifiez les quantités et les prix.");
+  }
 
   return {
     materialSubtotal,
@@ -76,7 +91,7 @@ export function calculateWorkshopEstimate(input: EstimateInput): EstimateResult 
     finishCost: input.finishCost,
     overheadCost: input.overheadCost,
     totalCost,
-    targetSellingPrice: totalCost / (1 - input.targetGrossMarginRate),
+    targetSellingPrice,
     targetGrossMarginRate: input.targetGrossMarginRate,
     assumptions: [
       "Les quantités proviennent d'une nomenclature validée par l'atelier.",

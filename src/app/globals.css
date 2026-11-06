@@ -95,7 +95,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #D4A3
 .app-footer span:first-child{font-weight:900;color:var(--wood)}
 .app-footer i{font-style:normal;color:var(--brass)}
 @media(max-width:1000px){.topline{padding:13px 22px}.tab-nav{padding:0 22px 11px}.main-wrap{padding:24px 22px 50px}.craft-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.work-grid{grid-template-columns:1fr}.welcome-band{padding:26px}}
-@media(max-width:620px){.topline{align-items:flex-start;padding:12px 14px;gap:12px}.brand-mark{width:43px;height:43px;border-radius:13px}.brand-name{font-size:19px}.brand p{font-size:8px}.top-actions{width:100%;justify-content:space-between}.workspace-chip{padding:7px 9px}.workspace-chip small{font-size:8px}.language-chip{font-size:7px;padding:8px}.tab-nav{padding:0 12px 10px;gap:5px}.nav-item{padding:10px 12px;font-size:9px}.main-wrap{padding:17px 13px 38px}.welcome-band{padding:22px 19px;border-radius:19px}.welcome-band h1{font-size:27px}.welcome-band p{font-size:10px}.welcome-stamp{min-width:0;padding:12px}.welcome-stamp span{font-size:6px}.section-intro{align-items:flex-start;flex-direction:column;margin:25px 0 13px}.section-intro h2{font-size:20px}.craft-grid{gap:9px}.craft-card{min-height:90px;padding:12px;gap:9px}.craft-icon{width:36px;height:36px}.craft-card h3{font-size:10px}.craft-card p{font-size:8px}.panel{padding:17px;border-radius:18px}.panel-heading h2{font-size:17px}.dimension-grid{gap:7px}.dimension-grid input{padding:10px 7px;font-size:11px}.cost-fields{gap:9px}.cost-fields input{padding:10px 8px}.estimate-result{grid-template-columns:1fr}.estimate-result b{font-size:20px}.metric-explain-grid{grid-template-columns:1fr}.roadmap-row{gap:11px;padding:13px}.roadmap-number{font-size:19px}.roadmap-row p{line-height:1.5}.roadmap-status{font-size:7px;padding:6px 8px}.feature-strip{padding:16px}.empty-state{padding:27px 17px}}
+@media(max-width:620px){.measurement-check{align-items:stretch;flex-direction:column;gap:12px}.measurement-confirm{width:100%}.topline{align-items:flex-start;padding:12px 14px;gap:12px}.brand-mark{width:43px;height:43px;border-radius:13px}.brand-name{font-size:19px}.brand p{font-size:8px}.top-actions{width:100%;justify-content:space-between}.workspace-chip{padding:7px 9px}.workspace-chip small{font-size:8px}.language-chip{font-size:7px;padding:8px}.tab-nav{padding:0 12px 10px;gap:5px}.nav-item{padding:10px 12px;font-size:9px}.main-wrap{padding:17px 13px 38px}.welcome-band{padding:22px 19px;border-radius:19px}.welcome-band h1{font-size:27px}.welcome-band p{font-size:10px}.welcome-stamp{min-width:0;padding:12px}.welcome-stamp span{font-size:6px}.section-intro{align-items:flex-start;flex-direction:column;margin:25px 0 13px}.section-intro h2{font-size:20px}.craft-grid{gap:9px}.craft-card{min-height:90px;padding:12px;gap:9px}.craft-icon{width:36px;height:36px}.craft-card h3{font-size:10px}.craft-card p{font-size:8px}.panel{padding:17px;border-radius:18px}.panel-heading h2{font-size:17px}.dimension-grid{gap:7px}.dimension-grid input{padding:10px 7px;font-size:11px}.cost-fields{gap:9px}.cost-fields input{padding:10px 8px}.estimate-result{grid-template-columns:1fr}.estimate-result b{font-size:20px}.metric-explain-grid{grid-template-columns:1fr}.roadmap-row{gap:11px;padding:13px}.roadmap-number{font-size:19px}.roadmap-row p{line-height:1.5}.roadmap-status{font-size:7px;padding:6px 8px}.feature-strip{padding:16px}.empty-state{padding:27px 17px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 
 
@@ -124,6 +124,16 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #D4A3
 .dimension-sliders label span{display:block;font-size:9px;font-weight:800;color:#604630}
 .dimension-sliders label b{display:block;margin:8px 0 10px;color:var(--wood);font:900 17px 'Cabinet Grotesk'}
 .dimension-sliders input{display:block;width:100%;accent-color:var(--wood)}
+.measurement-check{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:17px;padding:15px;border:1px solid #295f4e28;border-radius:14px;background:linear-gradient(110deg,#295f4e0b,#d4a37312)}
+.measurement-check-copy{min-width:0}
+.measurement-check-copy .section-kicker{margin-bottom:6px}
+.measurement-check-copy strong{display:block;color:#392719;font:800 12px 'Cabinet Grotesk',sans-serif}
+.measurement-check-copy p{max-width:440px;margin:5px 0 0;color:var(--muted);font-size:9px;line-height:1.6}
+.measurement-confirm{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:none;min-height:42px;padding:10px 13px;border:1px solid var(--forest);border-radius:10px;background:var(--forest);color:#fff;font-size:9px;font-weight:800;transition:background .18s,border-color .18s}
+.measurement-confirm:hover{background:var(--forest-dark);border-color:var(--forest-dark)}
+.measurement-confirm.is-verified{background:#fff;border-color:#295f4e;color:var(--forest)}
+.measurement-status{margin:8px 2px 0;color:#8a5b31;font-size:8px;line-height:1.5}
+.measurement-status.is-verified{color:var(--forest);font-weight:800}
 .estimate-intro{margin-top:30px}
 .estimate-panel-new{margin-top:0}
 .estimate-panel-new .cost-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -190,3 +200,69 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #D4A3
 .public-footer-brand{font:900 13px 'Cabinet Grotesk';color:var(--wood)}
 @media(max-width:900px){.public-hero{grid-template-columns:1fr;gap:32px;padding-top:28px}.timber-visual{min-height:310px;max-width:620px;width:100%;margin:auto}.public-workshop{grid-template-columns:auto minmax(0,1fr)}.public-workshop>.public-primary{grid-column:2;justify-self:start}}
 @media(max-width:620px){.site-link{font-size:8px}.public-header{padding:13px 15px;align-items:flex-start}.public-header nav{gap:10px;flex-wrap:wrap;justify-content:flex-end}.public-header nav a{font-size:8px}.public-header nav .public-header-cta{padding:9px 10px}.public-brand .brand-mark{width:42px;height:42px}.public-brand b{font-size:18px}.public-brand small{font-size:7px}.public-hero{padding:25px 17px 42px;gap:26px}.public-hero h1{font-size:39px}.public-hero-copy>p{font-size:11px}.public-actions{align-items:stretch;flex-direction:column}.public-primary,.public-secondary{width:100%;padding:13px}.timber-visual{min-height:260px;border-radius:19px}.timber-board{height:65px;padding:0 14px}.timber-board span{font-size:6px}.public-section{padding:24px 15px 46px}.public-section-heading h2{font-size:27px}.public-feature-grid{grid-template-columns:1fr;gap:10px}.public-feature{min-height:0;padding:18px}.public-workshop{margin:0 15px 45px;padding:19px;grid-template-columns:1fr;gap:14px}.public-workshop>.public-primary{grid-column:auto;justify-self:stretch}.public-footer{padding:18px 15px 24px;justify-content:center;text-align:center;flex-direction:column;gap:7px}}
+
+/* Furniture specification sheet */
+.furniture-sheet{margin-top:19px;padding:18px;border:1px solid var(--line);border-radius:16px;background:#fffdf9}
+.furniture-sheet .panel-heading{margin-bottom:7px}
+.furniture-fields{margin-top:14px}
+.furniture-fields textarea{display:block;width:100%;min-height:82px;resize:vertical;margin-top:7px;padding:11px 10px;border:1px solid var(--line);border-radius:10px;background:#fbf8f2;color:#392719;font:500 11px/1.6 inherit}
+.furniture-fields textarea:focus,.furniture-fields input:focus,.furniture-fields select:focus{outline:2px solid #295f4e55;outline-offset:1px}
+.furniture-summary{margin-top:14px;padding:14px;border-radius:12px;background:#f4efe7;border:1px solid #e4d8c8}
+.furniture-summary-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.furniture-summary-head b{font:800 11px 'Cabinet Grotesk';color:#392719}
+.furniture-summary-head span{font-size:7px;font-weight:900;color:var(--wood);text-transform:uppercase;letter-spacing:.08em}
+.furniture-summary p{margin:8px 0 0;color:#604630;font-size:9px;line-height:1.55}
+.furniture-summary p strong{color:#392719}
+.furniture-summary .furniture-notes{white-space:pre-wrap}
+.furniture-summary small{display:block;margin-top:10px;padding-top:9px;border-top:1px solid #ddcdbb;color:var(--muted);font-size:8px;line-height:1.6}
+@media(max-width:620px){.furniture-sheet{padding:14px}.furniture-fields{grid-template-columns:1fr}.furniture-fields .wide-field{grid-column:auto}.furniture-summary{padding:12px}}
+
+/* Client quote draft */
+.quote-draft{margin-top:22px;padding:18px;border:1px solid #d8c8b6;border-radius:16px;background:#fffdf9}
+.quote-fields{margin-top:14px}
+.quote-prepare-button{margin-top:14px}
+.quote-prepare-button:disabled{opacity:.45;cursor:not-allowed}
+.quote-hint{margin:8px 0 0;color:#8a5b31;font-size:8px;line-height:1.5}
+.quote-preview{margin-top:15px;padding:15px;border:1px solid #d9c9b7;border-radius:12px;background:#f7f2eb}
+.quote-preview p{margin:8px 0 0;color:#604630;font-size:9px;line-height:1.6;overflow-wrap:anywhere}
+.quote-preview p strong{color:#392719}
+.quote-preview small{display:block;margin-top:11px;padding-top:10px;border-top:1px solid #ddcdbb;color:var(--muted);font-size:8px;line-height:1.65}
+@media(max-width:620px){.quote-draft{padding:14px}.quote-fields{grid-template-columns:1fr}.quote-fields .wide-field{grid-column:auto}}
+
+
+/* Printable quote: visible only in the browser print dialog */
+.quote-print-sheet{display:none}
+.quote-print-button{margin-top:14px}
+@media print{
+  @page{size:A4;margin:18mm}
+  html,body{min-height:0!important;background:#fff!important}
+  body *{visibility:hidden!important}
+  .quote-print-sheet,.quote-print-sheet *{visibility:visible!important}
+  .quote-print-sheet{display:block!important;position:absolute;inset:0 auto auto 0;width:100%;padding:0;background:#fff;color:#24211e;font-family:Arial,sans-serif}
+  .quote-print-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:2px solid #295f4e}
+  .quote-print-brand{font-size:21px;font-weight:800;color:#593923}
+  .quote-print-header span{font-size:8px;font-weight:700;letter-spacing:.12em;color:#8b5e3c}
+  .quote-print-sheet h1{margin:28px 0 5px;font-size:28px;color:#29231e}
+  .quote-print-intro{margin:0 0 24px;color:#806d5b;font-size:10px}
+  .quote-print-sheet h2{margin:22px 0 7px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#295f4e}
+  .quote-print-sheet p{margin:5px 0;font-size:10px;line-height:1.6;white-space:normal;overflow-wrap:anywhere}
+  .quote-print-rule{height:1px;margin:18px 0;background:#e4d8c9}
+  .quote-print-total{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:12px 0;padding:15px;border:1px solid #d8c8b6;background:#f7f2eb}
+  .quote-print-total span{font-size:10px;font-weight:700}
+  .quote-print-total strong{font-size:19px;color:#295f4e}
+  .quote-print-notes{white-space:pre-wrap!important}
+  .quote-print-disclaimer{margin-top:28px!important;padding:12px;border:1px solid #e4d8c9;color:#6c5d4f;font-size:8px!important}
+  .quote-print-footer{margin-top:28px;padding-top:10px;border-top:1px solid #e4d8c9;color:#806d5b;font-size:8px}
+}
+
+/* Transparent estimate breakdown */
+.estimate-breakdown{margin-top:13px;padding:15px;border:1px solid var(--line);border-radius:13px;background:#fffdf9}
+.estimate-breakdown-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.estimate-breakdown-heading b{font:800 11px 'Cabinet Grotesk';color:#392719}
+.estimate-breakdown-heading span{font-size:8px;color:var(--muted)}
+.estimate-breakdown>div:not(.estimate-breakdown-heading){display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid #eee5da;font-size:9px;line-height:1.45}
+.estimate-breakdown>div b{flex:none;color:#392719;font-variant-numeric:tabular-nums;text-align:right}
+.estimate-breakdown-total{margin-top:3px;font-weight:900;color:#392719}
+.estimate-breakdown-margin{color:var(--forest);font-weight:800}
+.estimate-breakdown-margin b{color:var(--forest)!important}
+@media(max-width:620px){.estimate-breakdown{padding:12px}.estimate-breakdown-heading{align-items:flex-start;flex-direction:column;gap:4px}}
