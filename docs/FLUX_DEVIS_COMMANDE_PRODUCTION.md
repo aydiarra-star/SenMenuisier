@@ -1,7 +1,7 @@
 # Parcours métier — devis accepté, commande et fabrication
 
 Statut : conception fonctionnelle, non implémentée et non connectée à une base.
-Branche de référence pour ce document : `design/measure-assistant-v1`.
+Référence de consolidation : branche `main`.
 
 Ce document prépare la prochaine étape de SenMenuisier. Il ne signifie pas que les devis sont envoyés, que les commandes sont enregistrées ou que la production est suivie aujourd'hui.
 
