@@ -96,7 +96,7 @@ export default function HomePage() {
               <div className="brand-name">SenMenuisier <span className="version">ATELIER OS</span></div>
               <p>Le savoir-faire sénégalais, connecté au monde.</p>
             </div>
-          </a>
+          </Link>
           <div className="top-actions">
             <div className="workspace-chip"><span className="wood-dot" /> <span><b>Espace atelier</b><small>Mode aperçu · aucune donnée réelle</small></span></div>
             <span className="language-chip">FR <i>·</i> WOLOF EN PRÉPARATION</span>
