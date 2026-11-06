@@ -265,7 +265,31 @@ export default function HomePage() {
                   <p><strong>Prix cible indicatif :</strong> {money(estimate.targetSellingPrice)}</p>
                   <p><strong>Livraison souhaitée :</strong> {deliveryTarget || "À convenir avec le client"}</p>
                   <small>Avant envoi : vérifier les quantités, la portée du devis, les conditions de paiement et la date avec le client. L’acceptation devra être enregistrée pour ouvrir une commande.</small>
-                </div>}
+                  <button className="wood-button quote-print-button" type="button" onClick={() => window.print()}>Imprimer / Enregistrer en PDF</button>
+                </div>
+                <article className="quote-print-sheet" aria-label="Document de devis à imprimer">
+                  <header className="quote-print-header">
+                    <div className="quote-print-brand">SenMenuisier</div>
+                    <span>DOCUMENT DE TRAVAIL · BROUILLON</span>
+                  </header>
+                  <h1>Devis estimatif</h1>
+                  <p className="quote-print-intro">Le savoir-faire sénégalais, connecté au monde.</p>
+                  <div className="quote-print-rule" />
+                  <h2>Client</h2>
+                  <p>{clientName}{clientContact.trim() ? " · " + clientContact : ""}</p>
+                  <h2>Ouvrage proposé</h2>
+                  <p><strong>{selectedModel.title}</strong></p>
+                  <p>Dimensions : {width} × {height} × {depth} cm</p>
+                  <p>Matériau : {material} · Épaisseur : {boardThickness}</p>
+                  <p>Finition : {finishType} · Chant : {edgeBanding}</p>
+                  {workshopNotes.trim() && <><h2>Consignes particulières</h2><p className="quote-print-notes">{workshopNotes}</p></>}
+                  <h2>Estimation financière</h2>
+                  <div className="quote-print-total"><span>Prix de vente cible indicatif</span><strong>{money(estimate.targetSellingPrice)}</strong></div>
+                  <p>Date souhaitée de livraison : {deliveryTarget || "À convenir avec le client"}</p>
+                  <div className="quote-print-rule" />
+                  <p className="quote-print-disclaimer">Document de préparation non contractuel. Montant calculé à partir des informations saisies par l’atelier. Les quantités, fournitures, délais, conditions de paiement et taxes éventuelles restent à confirmer avec le client. Ce document n’est ni une facture, ni une preuve d’acceptation, ni une commande.</p>
+                  <footer className="quote-print-footer">SenMenuisier · Brouillon local non enregistré · {new Date().toLocaleDateString("fr-FR")}</footer>
+                </article>
               </section>
             </section>
           </>
