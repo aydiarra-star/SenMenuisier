@@ -105,10 +105,7 @@ export default function HomePage() {
   const [priceSource, setPriceSource] = useState("");
   const [priceDate, setPriceDate] = useState(new Date().toISOString().slice(0, 10));
   const [workspaceNotice, setWorkspaceNotice] = useState("");
-  useEffect(() => {
-    setQuotePrepared(false);
-  }, [width, height, depth, boardThickness, edgeBanding, workshopNotes, material, finishType, quantity, unitPrice, waste, labor, hardware, finishCost, overhead, margin, clientName, clientContact, deliveryTarget]);
-  useEffect(() => {
+   useEffect(() => {
     try {
       const saved = window.localStorage.getItem("senmenuisier-workspace-v1");
       if (saved) {
@@ -288,9 +285,9 @@ export default function HomePage() {
                 <div className="panel-heading"><div><span className="section-kicker">AJUSTEMENT PARAMÉTRIQUE</span><h2>{selectedModel.title}</h2></div><Ruler size={22} /></div>
                 <p className="panel-lead">Valeurs de départ du modèle. Ajustez-les selon le besoin du client et les contraintes du lieu.</p>
                 <div className="dimension-sliders">
-                  <label><span>Largeur (L)</span><b>{width} cm</b><input aria-label="Largeur en centimètres" type="range" min="60" max="400" value={width} onChange={(event) => { setWidth(event.target.value); setMeasurementsVerified(false); }} /></label>
-                  <label><span>Hauteur (H)</span><b>{height} cm</b><input aria-label="Hauteur en centimètres" type="range" min="50" max="300" value={height} onChange={(event) => { setHeight(event.target.value); setMeasurementsVerified(false); }} /></label>
-                  <label><span>Profondeur (P)</span><b>{depth} cm</b><input aria-label="Profondeur en centimètres" type="range" min="30" max="250" value={depth} onChange={(event) => { setDepth(event.target.value); setMeasurementsVerified(false); }} /></label>
+                  <label><span>Largeur (L)</span><b>{width} cm</b><input aria-label="Largeur en centimètres" type="range" min="60" max="400" value={width} onChange={(event) => { setWidth(event.target.value); setMeasurementsVerified(false); setQuotePrepared(false); }} /></label>
+                  <label><span>Hauteur (H)</span><b>{height} cm</b><input aria-label="Hauteur en centimètres" type="range" min="50" max="300" value={height} onChange={(event) => { setHeight(event.target.value); setMeasurementsVerified(false); setQuotePrepared(false); }} /></label>
+                  <label><span>Profondeur (P)</span><b>{depth} cm</b><input aria-label="Profondeur en centimètres" type="range" min="30" max="250" value={depth} onChange={(event) => { setDepth(event.target.value); setMeasurementsVerified(false); setQuotePrepared(false); }} /></label>
                 </div>
                 <div className="measurement-check">
                   <div className="measurement-check-copy">
@@ -309,9 +306,9 @@ export default function HomePage() {
                   <div className="panel-heading"><div><span className="section-kicker">FICHE DE L’OUVRAGE</span><h2 id="furniture-sheet-title">Préciser la fabrication</h2></div><Layers size={21} /></div>
                   <p className="panel-lead">Complétez les choix techniques avec le client avant de préparer le devis et le travail en atelier.</p>
                   <div className="cost-fields furniture-fields">
-                    <label>Épaisseur principale<select value={boardThickness} onChange={(event) => setBoardThickness(event.target.value)}><option>12 mm</option><option>15 mm</option><option>18 mm</option><option>22 mm</option><option>25 mm</option><option>À confirmer</option></select></label>
-                    <label>Chant / bordure<select value={edgeBanding} onChange={(event) => setEdgeBanding(event.target.value)}><option>PVC 0,8 mm</option><option>PVC 2 mm</option><option>Bois massif</option><option>Sans chant</option><option>À confirmer</option></select></label>
-                    <label className="wide-field">Consignes et contraintes de l’atelier<textarea rows={3} value={workshopNotes} onChange={(event) => setWorkshopNotes(event.target.value)} placeholder="Ex. : mur irrégulier, prise à gauche, finition à valider avec le client…" /></label>
+                    <label>Épaisseur principale<select value={boardThickness} onChange={(event) => { setBoardThickness(event.target.value); setQuotePrepared(false); }}><option>12 mm</option><option>15 mm</option><option>18 mm</option><option>22 mm</option><option>25 mm</option><option>À confirmer</option></select></label>
+                    <label>Chant / bordure<select value={edgeBanding} onChange={(event) => { setEdgeBanding(event.target.value); setQuotePrepared(false); }}><option>PVC 0,8 mm</option><option>PVC 2 mm</option><option>Bois massif</option><option>Sans chant</option><option>À confirmer</option></select></label>
+                    <label className="wide-field">Consignes et contraintes de l’atelier<textarea rows={3} value={workshopNotes} onChange={(event) => { setWorkshopNotes(event.target.value); setQuotePrepared(false); }} placeholder="Ex. : mur irrégulier, prise à gauche, finition à valider avec le client…" /></label>
                   </div>
                   <div className="furniture-summary">
                     <div className="furniture-summary-head"><b>Récapitulatif de l’ouvrage</b><span>Brouillon local</span></div>
@@ -330,16 +327,16 @@ export default function HomePage() {
               <div className="panel-heading"><div><span className="section-kicker">MATIÈRES & FINITIONS</span><h2>Nomenclature et coûts vérifiés</h2></div><Paintbrush size={22} /></div>
               <p className="panel-lead">Renseignez les montants réellement constatés auprès de vos fournisseurs. Aucun tarif de démonstration n’est prérempli.</p>
               <div className="cost-fields">
-                <label className="wide-field">Essence / matériau de base<select value={material} onChange={(event) => setMaterial(event.target.value)}><option value="">Choisir un panneau</option>{sheetMaterials.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-                <label>Nombre de panneaux<input type="number" min="0.01" step="0.01" value={quantity} onChange={(event) => setQuantity(event.target.value)} /></label>
-                <label>Prix par panneau (FCFA)<input type="number" min="0" value={unitPrice} onChange={(event) => setUnitPrice(event.target.value)} /></label>
-                <label>Pertes matière (%)<input type="number" min="0" max="100" value={waste} onChange={(event) => setWaste(event.target.value)} /></label>
-                <label>Finition & protection<select value={finishType} onChange={(event) => setFinishType(event.target.value)}><option value="">Choisir une finition</option>{finishOptions.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-                <label>Main-d’œuvre (FCFA)<input type="number" min="0" value={labor} onChange={(event) => setLabor(event.target.value)} /></label>
-                <label>Quincaillerie (FCFA)<input type="number" min="0" value={hardware} onChange={(event) => setHardware(event.target.value)} /></label>
-                <label>Coût de finition (FCFA)<input type="number" min="0" value={finishCost} onChange={(event) => setFinishCost(event.target.value)} /></label>
-                <label>Charges atelier (FCFA)<input type="number" min="0" value={overhead} onChange={(event) => setOverhead(event.target.value)} /></label>
-                <label>Marge brute cible (%)<input type="number" min="0" max="99.99" step="0.1" value={margin} onChange={(event) => setMargin(event.target.value)} /></label>
+                <label className="wide-field">Essence / matériau de base<select value={material} onChange={(event) => { setMaterial(event.target.value); setQuotePrepared(false); }}><option value="">Choisir un panneau</option>{sheetMaterials.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label>Nombre de panneaux<input type="number" min="0.01" step="0.01" value={quantity} onChange={(event) => { setQuantity(event.target.value); setQuotePrepared(false); }} /></label>
+                <label>Prix par panneau (FCFA)<input type="number" min="0" value={unitPrice} onChange={(event) => { setUnitPrice(event.target.value); setQuotePrepared(false); }} /></label>
+                <label>Pertes matière (%)<input type="number" min="0" max="100" value={waste} onChange={(event) => { setWaste(event.target.value); setQuotePrepared(false); }} /></label>
+                <label>Finition & protection<select value={finishType} onChange={(event) => { setFinishType(event.target.value); setQuotePrepared(false); }}><option value="">Choisir une finition</option>{finishOptions.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label>Main-d’œuvre (FCFA)<input type="number" min="0" value={labor} onChange={(event) => { setLabor(event.target.value); setQuotePrepared(false); }} /></label>
+                <label>Quincaillerie (FCFA)<input type="number" min="0" value={hardware} onChange={(event) => { setHardware(event.target.value); setQuotePrepared(false); }} /></label>
+                <label>Coût de finition (FCFA)<input type="number" min="0" value={finishCost} onChange={(event) => { setFinishCost(event.target.value); setQuotePrepared(false); }} /></label>
+                <label>Charges atelier (FCFA)<input type="number" min="0" value={overhead} onChange={(event) => { setOverhead(event.target.value); setQuotePrepared(false); }} /></label>
+                <label>Marge brute cible (%)<input type="number" min="0" max="99.99" step="0.1" value={margin} onChange={(event) => { setMargin(event.target.value); setQuotePrepared(false); }} /></label>
               </div>
               <div className="estimate-result">
                 <div><span>Coût de fabrication estimé</span><b>{estimate ? money(estimate.totalCost) : "À renseigner"}</b></div>
@@ -365,9 +362,9 @@ export default function HomePage() {
                 <div className="panel-heading"><div><span className="section-kicker">ÉTAPE SUIVANTE</span><h2 id="quote-draft-title">Préparer le devis client</h2></div><Hammer size={21} /></div>
                 <p className="panel-lead">Le devis ne peut être préparé qu’après contrôle des mesures et saisie des coûts. Il reste un brouillon tant qu’il n’est pas enregistré et envoyé par l’atelier.</p>
                 <div className="cost-fields quote-fields">
-                  <label>Nom du client<input value={clientName} onChange={(event) => setClientName(event.target.value)} placeholder="Nom et prénom" /></label>
-                  <label>Téléphone / WhatsApp<input type="tel" value={clientContact} onChange={(event) => setClientContact(event.target.value)} placeholder="Numéro communiqué par le client" /></label>
-                  <label className="wide-field">Date souhaitée de livraison<input type="date" value={deliveryTarget} onChange={(event) => setDeliveryTarget(event.target.value)} /></label>
+                  <label>Nom du client<input value={clientName} onChange={(event) => { setClientName(event.target.value); setQuotePrepared(false); }} placeholder="Nom et prénom" /></label>
+                  <label>Téléphone / WhatsApp<input type="tel" value={clientContact} onChange={(event) => { setClientContact(event.target.value); setQuotePrepared(false); }} placeholder="Numéro communiqué par le client" /></label>
+                  <label className="wide-field">Date souhaitée de livraison<input type="date" value={deliveryTarget} onChange={(event) => { setDeliveryTarget(event.target.value); setQuotePrepared(false); }} /></label>
                 </div>
                 <button className="wood-button quote-prepare-button" type="button" disabled={!estimate || !measurementsVerified || !clientName.trim()} onClick={() => setQuotePrepared(true)}>Préparer l’aperçu du devis</button>
                 {!measurementsVerified && <p className="quote-hint">Confirmez d’abord les mesures sur place.</p>}
