@@ -13,11 +13,13 @@ Le brouillon actuel dans l'interface reste local à la session. Il ne doit pas �
 
 ## 2. Cycle de vie du devis
 
-États autorisés :
+États métier proposés :
 
 1. `draft` — préparation interne, modifiable.
-2. `prepared` — contrôles métier passés, prêt à être transmis.
-3. `sent` — transmis au client ; date, canal et auteur consignés.
+2. `prepared` — étape de contrôle dans l'interface, avant transmission ; ce n'est pas encore un état persisté dans le schéma actuel.
+3. `sent` — transmis au client ; date, canal et auteur consignés. Dans le schéma actuel, cet état correspond à `shared`.
+
+Le schéma de domaine déjà présent utilise `draft`, `shared`, `accepted`, `rejected`, `expired` et `cancelled`. Avant toute migration, il faudra soit conserver ces noms (`shared` pour `sent`), soit réaliser une migration explicite et adapter les validateurs et tests ensemble. Ne pas laisser coexister deux vocabulaires silencieusement.
 4. `accepted` — accord du client reçu et confirmé par un membre autorisé.
 5. `rejected` — refus explicite du client.
 6. `expired` — date de validité dépassée sans acceptation.
