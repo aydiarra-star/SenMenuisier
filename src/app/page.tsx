@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import Link from "next/link";
 import {
-  Axe, Drill, Hammer, Layers, Paintbrush, Ruler, TreePine, Wrench, Plus, Trash2, MessageCircle, Phone, MapPin, CalendarClock, Check, CircleAlert
+  Drill, Hammer, Layers, Paintbrush, Ruler, TreePine, Plus, Trash2, MessageCircle, Phone, CalendarClock, Check, CircleAlert
 } from "lucide-react";
 import { calculateWorkshopEstimate } from "@/lib/estimate";
 import { productSpaces as sections } from "@/lib/product-spaces";
@@ -59,17 +59,6 @@ const roadmap = [
 
 const money = (value: number) =>
   new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(Math.round(value)) + " FCFA";
-
-function EmptyState({ title, detail }: { title: string; detail: string }) {
-  return (
-    <div className="empty-state">
-      <div className="empty-woodmark" aria-hidden="true"><Layers size={25} /></div>
-      <h3>{title}</h3>
-      <p>{detail}</p>
-      <span className="status-note">Données réelles requises · aucune démonstration fictive</span>
-    </div>
-  );
-}
 
 export default function HomePage() {
   const [section, setSection] = useState<Section>("catalogue");
