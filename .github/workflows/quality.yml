@@ -1,0 +1,54 @@
+name: Qualité SenMenuisier
+
+on:
+  push:
+    branches:
+      - design/foundation-v1
+  pull_request:
+    branches:
+      - main
+      - design/foundation-v1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: senmenuisier-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Tests, types, lint et build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
+      - name: Installer les dépendances
+        run: npm ci --no-audit --no-fund
+      - name: Auditer les dépendances
+        run: |
+          npm audit --json > npm-audit.json || true
+          node -e 'const r=require("./npm-audit.json"); console.log("Résumé audit:", JSON.stringify(r.metadata?.vulnerabilities ?? {})); for (const [name, item] of Object.entries(r.vulnerabilities ?? {})) console.log(JSON.stringify({name, severity:item.severity, direct:item.isDirect, range:item.range, fixAvailable:item.fixAvailable, via:item.via.map(v => typeof v === "string" ? v : v.title)}));'
+      - name: Bloquer la CI si une vulnérabilité reste connue
+        run: npm audit --audit-level=low
+      - name: Conserver le rapport et le verrouillage
+        uses: actions/upload-artifact@v4
+        with:
+          name: senmenuisier-dependencies
+          path: |
+            package-lock.json
+            npm-audit.json
+          retention-days: 7
+      - name: Tests métier
+        run: npm test
+      - name: Vérifier TypeScript
+        run: npm run typecheck
+      - name: Vérifier le code
+        run: npm run lint
+      - name: Construire l'application
+        run: npm run build
