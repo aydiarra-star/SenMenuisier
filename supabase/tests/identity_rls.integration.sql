@@ -7,16 +7,24 @@ insert into auth.users (id) values
   ('10000000-0000-4000-8000-000000000003')
 on conflict do nothing;
 
+-- Profile writes are restricted to user-editable columns.
+select 1 / case when has_column_privilege('authenticated', 'public.profiles', 'display_name', 'UPDATE') then 1 else 0 end;
+select 1 / case when has_column_privilege('authenticated', 'public.profiles', 'phone', 'UPDATE') then 1 else 0 end;
+select 1 / case when not has_column_privilege('authenticated', 'public.profiles', 'id', 'UPDATE') then 1 else 0 end;
+select 1 / case when not has_column_privilege('authenticated', 'public.profiles', 'created_at', 'UPDATE') then 1 else 0 end;
+select 1 / case when not has_column_privilege('authenticated', 'public.profiles', 'updated_at', 'UPDATE') then 1 else 0 end;
+select 1 / case when not has_column_privilege('authenticated', 'public.profiles', 'created_at', 'INSERT') then 1 else 0 end;
+
 -- Owner A creates an atelier through the public RPC. Creation must be atomic.
 set role authenticated;
 select set_config('request.jwt.claim.sub', '10000000-0000-4000-8000-000000000001', false);
-select public.create_workshop('Atelier Test A', 'Dakar') as workshop_a \gset
+select public.create_workshop('Atelier Test A', 'Dakar') as workshop_a \\gset
 reset role;
 
 -- A second, unrelated owner creates a separate atelier.
 set role authenticated;
 select set_config('request.jwt.claim.sub', '10000000-0000-4000-8000-000000000002', false);
-select public.create_workshop('Atelier Test B', 'Bakel') as workshop_b \gset
+select public.create_workshop('Atelier Test B', 'Bakel') as workshop_b \\gset
 reset role;
 
 -- The first owner membership and audit event must have been created with the atelier.
@@ -50,7 +58,7 @@ select 1 / case when private.has_workshop_permission(:'workshop_a'::uuid, 'finan
 
 -- Owner can update allowed workshop fields; the database owns updated_at.
 select updated_at as before_updated_at
-from public.workshops where id = :'workshop_a'::uuid \gset
+from public.workshops where id = :'workshop_a'::uuid \\gset
 select pg_sleep(0.02);
 update public.workshops set name = 'Atelier Test A Modifié'
 where id = :'workshop_a'::uuid;
@@ -91,4 +99,4 @@ select 1 / case when not has_table_privilege('authenticated', 'public.audit_even
 select 1 / case when not has_table_privilege('authenticated', 'public.workshop_invitations', 'SELECT') then 1 else 0 end;
 select 1 / case when not has_table_privilege('authenticated', 'public.workshop_permission_grants', 'SELECT') then 1 else 0 end;
 
-\echo 'PostgreSQL RLS integration tests: PASS'
+\\echo 'PostgreSQL RLS integration tests: PASS'
