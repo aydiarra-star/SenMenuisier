@@ -122,7 +122,12 @@ describe("SenMenuisier domain schemas", () => {
       internalCostXof: 85000,
     };
     expect(productPassportPublicSchema.safeParse(passport).success).toBe(false);
-    const publicPassport = {\n      publicId: passport.publicId,\n      productName: passport.productName,\n      workshopDisplayName: passport.workshopDisplayName,\n      materials: passport.materials,\n    };
+    const publicPassport = {
+      publicId: passport.publicId,
+      productName: passport.productName,
+      workshopDisplayName: passport.workshopDisplayName,
+      materials: passport.materials,
+    };
     expect(productPassportPublicSchema.safeParse(publicPassport).success).toBe(true);
   });
 });
