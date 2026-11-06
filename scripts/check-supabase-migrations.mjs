@@ -9,7 +9,7 @@ const hardening = read("supabase/migrations/20261106000300_audit_and_write_harde
 
 const tables = ["profiles", "workshops", "workshop_memberships", "workshop_invitations", "workshop_permission_grants", "audit_events"];
 for (const table of tables) {
-  assert.match(identity, new RegExp("alter table public\\." + table + " enable row level security", "i"), \`RLS missing on \${table}\`);
+  assert.match(identity, new RegExp("alter table public\\." + table + " enable row level security", "i"), "RLS missing on " + table);
 }
 assert.match(identity, /create schema if not exists private/i, "private schema missing");
 assert.match(identity, /revoke all on schema private from public, anon, authenticated/i, "private schema default privileges not closed");
