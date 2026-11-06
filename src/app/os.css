@@ -273,7 +273,7 @@
   margin:0;font-family:var(--display);font-weight:800;font-size:14px;
   letter-spacing:-.02em;color:#2B241D;
 }
-.os-card-head .os-head-link{margin-left:auto;display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:#4B4036}
+.os-card-head .os-head-link{margin-left:auto;display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:#4B4036;white-space:nowrap;flex:none}
 .os-head-link:hover{color:var(--emerald)}
 .os-tile{display:grid;place-items:center;width:29px;height:29px;border-radius:8px;background:#F4EDE1;color:#B47C4C;flex:none}
 .os-tile img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
@@ -821,6 +821,11 @@
   .os-hero p{white-space:normal;font-size:10.5px;max-width:100%}
   .os-hero>div{max-width:100%}
   .os-nav-item{padding:7px 9px;font-size:10.5px}
+  .os-card-head{gap:7px}
+  .os-card-head h2{font-size:13px}
+  .os-head-link{font-size:9px}
+  .os-module-title h1{font-size:22px}
+  .os-module-title p{font-size:10.5px}
 }
 @media(prefers-reduced-motion:reduce){
   .os-root *{transition:none!important;animation:none!important}

@@ -6,8 +6,12 @@ SenMenuisier est le système opérationnel des ateliers de menuiserie au Sénég
 
 ## Les deux expériences
 
-- **Application atelier** : aperçu du tableau de bord métier à la racine du site.
+- **Application atelier** : interface « OS de la menuiserie » à la racine du site
+  (rail de navigation, entête, accueil : bandeau, catégories, modèles populaires,
+  conception paramétrique, estimation rapide, suivi de production, passeport QR).
+  Détail : `docs/ECRAN_ENTREE_OS.md`.
 - **Site public** : présentation du produit sur `/vitrine`.
+- **Ancienne page de conception** : conservée à l'identique sur `/espace-atelier/`.
 
 ## Les six espaces de l'application
 
