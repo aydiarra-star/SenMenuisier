@@ -131,7 +131,7 @@ Sécurité : audit_events, export_jobs, access_grants.
 
 Avant toute migration : clés étrangères, contraintes, index, stratégie de suppression, règles de conservation, RLS et tests inter-ateliers doivent être définis.
 
-## Phasage de livraison
+## Les six espaces de l'interface (ordre obligatoire)\n\n1. Catalogue Intelligent\n2. Production & Passeport QR\n3. Score Santé de l’atelier\n4. Base de Prix Nationale\n5. CRM Artisan & Relances\n6. Feuille de Route\n\nLe site public de présentation est séparé de l’application atelier : route `/vitrine` pour la présentation, racine `/` pour l’aperçu atelier. Ces routes n'impliquent pas que les fonctions métier soient déjà connectées.\n\n## Phasage de livraison
 
 - P0 — Contrat produit, règles métier, identité visuelle et critères d'acceptation.
 - P1 — Interface responsive, navigation, composants, états vides et calculateur transparent.
