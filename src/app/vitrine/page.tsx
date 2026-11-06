@@ -1,16 +1,7 @@
 import Link from "next/link";
-import {
-  Axe, Drill, Hammer, Layers, Paintbrush, Ruler, TreePine, Wrench
-} from "lucide-react";
+import { productSpaces } from "@/lib/product-spaces";
 
-const spaces = [
-  { title: "Catalogue intelligent", text: "Préparer un modèle, ajuster les dimensions et structurer une nomenclature avant le devis.", icon: Layers },
-  { title: "Production & passeport QR", text: "Organiser les opérations, suivre les contrôles et préparer la traçabilité du meuble.", icon: Hammer },
-  { title: "Score Santé atelier", text: "Comprendre les délais, les coûts, les paiements et les stocks à partir de données fiables.", icon: Ruler },
-  { title: "Base de Prix nationale", text: "Documenter les prix par région, unité, qualité, date et source vérifiable.", icon: TreePine },
-  { title: "CRM artisan", text: "Garder les contacts, les consentements, les devis et les relances au même endroit.", icon: Drill },
-  { title: "Feuille de route", text: "Suivre les étapes de construction de l’outil, les priorités métier et les prochaines évolutions de l’atelier numérique.", icon: Axe },
-];
+
 
 export default function VitrinePage() {
   return (
@@ -53,12 +44,12 @@ export default function VitrinePage() {
           <p>Les fonctions sont construites autour des gestes et des réalités de l’atelier, pas autour d’indicateurs inventés.</p>
         </div>
         <div className="public-feature-grid">
-          {spaces.map(({ title, text, icon: Icon }, index) => (
+          {productSpaces.map(({ title, summary, icon: Icon }, index) => (
             <article className="public-feature" key={title}>
               <span className="public-feature-number">0{index + 1}</span>
               <div className="public-feature-icon"><Icon size={24} /></div>
               <h3>{title}</h3>
-              <p>{text}</p>
+              <p>{summary}</p>
             </article>
           ))}
         </div>
