@@ -295,7 +295,7 @@ export default function HomePage() {
                     <strong>Vérifier les trois cotes avant le devis</strong>
                     <p>Relevez largeur, hauteur et profondeur au mètre. L’aide caméra/AR du téléphone n’est pas encore active : aucune mesure automatique n’est simulée.</p>
                   </div>
-                  <button className={measurementsVerified ? "measurement-confirm is-verified" : "measurement-confirm"} type="button" aria-pressed={measurementsVerified} onClick={() => setMeasurementsVerified((value) => !value)}>
+                  <button className={measurementsVerified ? "measurement-confirm is-verified" : "measurement-confirm"} type="button" aria-pressed={measurementsVerified} onClick={() => { setMeasurementsVerified((value) => !value); setQuotePrepared(false); }}>
                     <Ruler size={16} /> {measurementsVerified ? "Relevé vérifié" : "Confirmer le relevé"}
                   </button>
                 </div>
