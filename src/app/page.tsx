@@ -136,7 +136,7 @@ export default function HomePage() {
             <Link className="site-link" href="/vitrine">Site public</Link>
             <div className="workspace-chip"><span className="wood-dot" /><span><b>Espace atelier</b><small>Aperçu · aucun atelier connecté</small></span></div>
             <button className="health-chip" type="button" onClick={() => setSection("sante")}><Ruler size={15} /><span>Score Santé : <b>Non calculé</b></span></button>
-            <button className="quote-chip" type="button" onClick={() => { setSection("catalogue"); setEstimateRequested(true); }}><Hammer size={15} /><span>Préparer un devis</span></button>
+            <button className="quote-chip" type="button" onClick={() => { setSection("catalogue"); setEstimateRequested(true); }}><Hammer size={15} /><span>Préparer une estimation</span></button>
           </div>
         </div>
         <nav className="tab-nav" aria-label="Les six espaces SenMenuisier">
