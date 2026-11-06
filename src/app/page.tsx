@@ -3,39 +3,59 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  Axe, Drill, Hammer, Layers, Paintbrush, Ruler, TreePine,
-  Wrench
+  Axe, Drill, Hammer, Layers, Paintbrush, Ruler, TreePine, Wrench
 } from "lucide-react";
 import { calculateWorkshopEstimate } from "@/lib/estimate";
 
-type Section = "catalogue" | "production" | "atelier" | "materiaux" | "clients" | "roadmap";
+type Section = "catalogue" | "production" | "sante" | "prix" | "crm" | "roadmap";
+type WorkshopModel = {
+  id: string;
+  title: string;
+  short: string;
+  width: number;
+  height: number;
+  depth: number;
+  icon: typeof Hammer;
+};
 
-const sections: { id: Section; label: string; short: string; icon: typeof Hammer }[] = [
-  { id: "catalogue", label: "Catalogue & devis", short: "Catalogue", icon: Layers },
-  { id: "production", label: "Fabrication & QR", short: "Fabrication", icon: Hammer },
-  { id: "atelier", label: "Pilotage atelier", short: "Atelier", icon: Ruler },
-  { id: "materiaux", label: "Bois & matériaux", short: "Matériaux", icon: TreePine },
-  { id: "clients", label: "Clients & relances", short: "Clients", icon: Drill },
-  { id: "roadmap", label: "Évolution", short: "Évolution", icon: Axe },
+const sections: { id: Section; label: string; icon: typeof Hammer }[] = [
+  { id: "catalogue", label: "1. Catalogue Intelligent", icon: Layers },
+  { id: "production", label: "2. Production & Passeport QR", icon: Hammer },
+  { id: "sante", label: "3. Score Santé", icon: Ruler },
+  { id: "prix", label: "4. Base de Prix Nationale", icon: TreePine },
+  { id: "crm", label: "5. CRM Artisan & Relances", icon: Drill },
+  { id: "roadmap", label: "6. Feuille de Route", icon: Axe },
 ];
 
-const sheetMaterials = ["MDF standard 18 mm", "MDF hydrofuge 18 mm", "Contreplaqué 18 mm", "Panneau mélaminé 18 mm"] as const;
-
-const crafts = [
-  { name: "Mobilier sur mesure", detail: "Armoires, lits, tables, bureaux et rangements.", icon: Layers },
-  { name: "Cuisine & agencement", detail: "Caissons, plans de travail et aménagement intérieur.", icon: Ruler },
-  { name: "Bois massif", detail: "Essences locales, assemblages et finitions.", icon: TreePine },
-  { name: "Panneaux & dérivés", detail: "MDF, contreplaqué, mélaminé et stratifié.", icon: Layers },
-  { name: "Finition & protection", detail: "Vernis, huiles, peintures et abrasifs.", icon: Paintbrush },
+const models: WorkshopModel[] = [
+  { id: "armoire", title: "Armoire 3 Portes", short: "Rangements et tiroirs bas", width: 180, height: 220, depth: 60, icon: Layers },
+  { id: "cuisine", title: "Cuisine Modulaire en L", short: "Plan de travail et caissons", width: 280, height: 85, depth: 60, icon: Ruler },
+  { id: "lit", title: "Lit 2 Places Luxe", short: "Tête intégrée et coffre optionnel", width: 180, height: 110, depth: 200, icon: TreePine },
+  { id: "bureau", title: "Bureau Sur-Mesure", short: "Caisson et passage de câbles", width: 160, height: 75, depth: 80, icon: Hammer },
 ];
+
+const sheetMaterials = [
+  "MDF standard 18 mm",
+  "MDF hydrofuge 18 mm",
+  "Contreplaqué 18 mm",
+  "Panneau mélaminé 18 mm",
+] as const;
+
+const finishOptions = [
+  "Vernis satiné",
+  "Huile naturelle",
+  "Laque mate",
+  "Brut poncé",
+] as const;
 
 const roadmap = [
-  ["Socle atelier", "Comptes, ateliers, invitations et permissions"],
-  ["Clients & devis", "Fiches clients, devis versionnés et documents PDF"],
-  ["Matières & stock", "Référentiel bois, quincaillerie, mouvements et alertes"],
-  ["Fabrication", "Dossiers, pièces, opérations, responsables et échéances"],
-  ["Qualité & QR", "Contrôles, livraison, garantie et passeport public filtré"],
-  ["Réseau professionnel", "Vitrines, portfolios et demandes de devis"],
+  ["Atelier digital", "Clients, devis, commandes et documents de travail", "Socle prioritaire"],
+  ["Production & stocks", "Ordres de fabrication, tâches, mouvements et inventaires", "À construire"],
+  ["Calculateur bois", "Nomenclature, débit, chutes et optimisation des panneaux", "À construire"],
+  ["Passeport numérique", "QR public filtré, traçabilité et garantie", "À construire"],
+  ["Intelligence atelier", "Conseils fondés sur les données réelles et expliquables", "À construire"],
+  ["Réseau professionnel", "Fournisseurs, sous-traitants et entraide métier", "À construire"],
+  ["Marketplace artisans", "Vitrines, portfolios et demandes de devis", "À construire"],
 ];
 
 const money = (value: number) =>
@@ -47,32 +67,38 @@ function EmptyState({ title, detail }: { title: string; detail: string }) {
       <div className="empty-woodmark" aria-hidden="true"><Layers size={25} /></div>
       <h3>{title}</h3>
       <p>{detail}</p>
-      <span className="status-note">En attente de connexion des données de l’atelier</span>
+      <span className="status-note">Données réelles requises · aucune démonstration fictive</span>
     </div>
   );
 }
 
 export default function HomePage() {
   const [section, setSection] = useState<Section>("catalogue");
-  const [width, setWidth] = useState("");
-  const [height, setHeight] = useState("");
-  const [depth, setDepth] = useState("");
+  const [modelId, setModelId] = useState("armoire");
+  const [width, setWidth] = useState("180");
+  const [height, setHeight] = useState("220");
+  const [depth, setDepth] = useState("60");
   const [material, setMaterial] = useState("");
+  const [finishType, setFinishType] = useState("");
   const [quantity, setQuantity] = useState("");
   const [unitPrice, setUnitPrice] = useState("");
   const [waste, setWaste] = useState("");
   const [labor, setLabor] = useState("");
   const [hardware, setHardware] = useState("");
-  const [finish, setFinish] = useState("");
+  const [finishCost, setFinishCost] = useState("");
   const [overhead, setOverhead] = useState("");
   const [margin, setMargin] = useState("");
   const [estimateRequested, setEstimateRequested] = useState(false);
 
+  const selectedModel = models.find((model) => model.id === modelId) ?? models[0];
+  const active = sections.find((item) => item.id === section)!;
+  const ActiveIcon = active.icon;
+
   const estimate = useMemo(() => {
-    const rawValues = [quantity, unitPrice, waste, labor, hardware, finish, overhead, margin];
-    if (material.trim() === "" || rawValues.some((value) => value.trim() === "")) return null;
+    const rawValues = [quantity, unitPrice, waste, labor, hardware, finishCost, overhead, margin];
+    if (material.trim() === "" || finishType.trim() === "" || rawValues.some((value) => value.trim() === "")) return null;
     const values = rawValues.map(Number);
-    if (values.some((v) => !Number.isFinite(v) || v < 0) || values[0] <= 0 || values[1] <= 0 || values[2] > 100 || values[7] >= 100) return null;
+    if (values.some((value) => !Number.isFinite(value) || value < 0) || values[0] <= 0 || values[1] <= 0 || values[2] > 100 || values[7] >= 100) return null;
     try {
       return calculateWorkshopEstimate({
         materials: [{ name: material, quantity: values[0], unit: "panel", unitPrice: values[1], priceUnit: "panel" }],
@@ -86,28 +112,33 @@ export default function HomePage() {
     } catch {
       return null;
     }
-  }, [material, quantity, unitPrice, waste, labor, hardware, finish, overhead, margin]);
+  }, [material, finishType, quantity, unitPrice, waste, labor, hardware, finishCost, overhead, margin]);
 
-  const active = sections.find((item) => item.id === section)!;
-  const ActiveIcon = active.icon;
+  function chooseModel(model: WorkshopModel) {
+    setModelId(model.id);
+    setWidth(String(model.width));
+    setHeight(String(model.height));
+    setDepth(String(model.depth));
+  }
 
   return (
     <div className="app-shell">
       <header className="topbar">
         <div className="topline">
           <Link className="brand" href="/" aria-label="SenMenuisier, accueil">
-            <div className="brand-mark"><TreePine size={27} strokeWidth={1.8} /></div>
+            <div className="brand-mark">SM</div>
             <div>
-              <div className="brand-name">SenMenuisier <span className="version">ATELIER OS</span></div>
+              <div className="brand-name">SenMenuisier <span className="version">OS V1.0</span></div>
               <p>Le savoir-faire sénégalais, connecté au monde.</p>
             </div>
           </Link>
           <div className="top-actions">
-            <div className="workspace-chip"><span className="wood-dot" /> <span><b>Espace atelier</b><small>Mode aperçu · aucune donnée réelle</small></span></div>
-            <span className="language-chip">FR <i>·</i> WOLOF EN PRÉPARATION</span>
+            <div className="workspace-chip"><span className="wood-dot" /><span><b>Espace atelier</b><small>Aperçu · aucun atelier connecté</small></span></div>
+            <button className="health-chip" type="button" onClick={() => setSection("sante")}><Ruler size={15} /><span>Score Santé : <b>Non calculé</b></span></button>
+            <button className="quote-chip" type="button" onClick={() => { setSection("catalogue"); setEstimateRequested(true); }}><Hammer size={15} /><span>Préparer un devis</span></button>
           </div>
         </div>
-        <nav className="tab-nav" aria-label="Espaces de travail">
+        <nav className="tab-nav" aria-label="Les six espaces SenMenuisier">
           {sections.map(({ id, label, icon: Icon }) => (
             <button key={id} type="button" onClick={() => setSection(id)} className={section === id ? "nav-item active" : "nav-item"} aria-current={section === id ? "page" : undefined}>
               <Icon size={17} strokeWidth={1.8} /><span>{label}</span>
@@ -119,66 +150,133 @@ export default function HomePage() {
       <main className="main-wrap">
         <section className="welcome-band">
           <div className="welcome-copy">
-            <div className="eyebrow"><ActiveIcon size={16} /> L’ATELIER NUMÉRIQUE DU MENUISIER</div>
-            <h1>{section === "catalogue" ? "Du croquis au devis, avec méthode." : active.label}</h1>
+            <div className="eyebrow"><ActiveIcon size={16} /> L’OS DE LA MENUISERIE AFRICAINE</div>
+            <h1>{section === "catalogue" ? "Du modèle à l’ouvrage sur mesure." : active.label.replace(/^\d\. /, "")}</h1>
             <p>{section === "catalogue"
-              ? "Préparez vos ouvrages, détaillez les matières et estimez vos coûts sans masquer les hypothèses."
-              : "Un espace pensé pour organiser le travail, préserver le savoir-faire et suivre chaque ouvrage."}</p>
+              ? "Choisissez un modèle, ajustez ses dimensions et préparez une estimation à partir de matières et de coûts vérifiés."
+              : "Un espace métier conçu pour organiser l’atelier, suivre les ouvrages et valoriser le savoir-faire du menuisier."}</p>
           </div>
-          <div className="welcome-stamp"><Axe size={22} /><span>BOIS · MESURE · OUVRAGE</span></div>
+          <div className="welcome-stamp"><TreePine size={22} /><span>BOIS · MESURE · OUVRAGE</span></div>
         </section>
 
         {section === "catalogue" && (
           <>
-            <div className="section-intro"><div><span className="section-kicker">01 / CONCEPTION</span><h2>Votre ouvrage commence ici</h2></div><span className="local-only">Calcul local · non enregistré</span></div>
-            <div className="craft-grid">
-              {crafts.map(({ name, detail, icon: Icon }) => <article className="craft-card" key={name}><div className="craft-icon"><Icon size={23} /></div><div><h3>{name}</h3><p>{detail}</p></div></article>)}
-            </div>
-            <div className="work-grid">
-              <section className="panel dimensions-panel">
-                <div className="panel-heading"><div><span className="section-kicker">FICHE DE L’OUVRAGE</span><h2>Dimensions & matière</h2></div><Ruler size={22} /></div>
-                <p className="panel-lead">Saisissez les mesures de votre meuble. Elles sont conservées uniquement dans cette page pour le moment.</p>
-                <div className="dimension-grid">
-                  <label>Largeur <span>cm</span><input type="number" min="1" max="1000" value={width} onChange={(e) => setWidth(e.target.value)} /></label>
-                  <label>Hauteur <span>cm</span><input type="number" min="1" max="1000" value={height} onChange={(e) => setHeight(e.target.value)} /></label>
-                  <label>Profondeur <span>cm</span><input type="number" min="1" max="1000" value={depth} onChange={(e) => setDepth(e.target.value)} /></label>
+            <div className="section-intro"><div><span className="section-kicker">01 / CONCEPTION & ESTIMATION</span><h2>Catalogue intelligent de meubles</h2></div><span className="local-only">Modèle de départ · non enregistré</span></div>
+            <div className="catalogue-layout">
+              <section className="model-column">
+                <h3 className="subsection-heading"><Layers size={17} /> Modèles standardisés</h3>
+                <div className="model-list">
+                  {models.map(({ id, title, short, icon: Icon, ...dimensions }) => (
+                    <button type="button" key={id} onClick={() => chooseModel(models.find((item) => item.id === id)!)} className={modelId === id ? "model-card selected" : "model-card"}>
+                      <span className="craft-icon"><Icon size={24} /></span>
+                      <span className="model-copy"><b>{title}</b><small>{short}</small></span>
+                      <span className="model-edge">{modelId === id ? "Choisi" : "Sélectionner"}</span>
+                    </button>
+                  ))}
                 </div>
-                <div className="material-callout"><TreePine size={19} /><div><b>Choix du matériau</b><p>Le type, l’épaisseur, le format et le sens du fil doivent être précisés dans la nomenclature avant tout plan de débit.</p></div></div>
-                <div className="dimension-foot"><span>Largeur : {width || "—"} cm</span><span>Hauteur : {height || "—"} cm</span><span>Profondeur : {depth || "—"} cm</span></div>
               </section>
 
-              <section className="panel estimate-panel-new">
-                <div className="panel-heading"><div><span className="section-kicker">CALCUL TRANSPARENT</span><h2>Estimation des coûts</h2></div><Hammer size={22} /></div>
-                <p className="panel-lead">Renseignez les quantités et prix que vous avez vérifiés. Aucun tarif fournisseur n’est inventé.</p>
-                <div className="cost-fields">
-                  <label>Nombre de panneaux<input type="number" min="0" step="0.01" value={quantity} onChange={(e) => setQuantity(e.target.value)} /></label>
-                  <label>Prix par panneau (FCFA)<input type="number" min="0" value={unitPrice} onChange={(e) => setUnitPrice(e.target.value)} /></label>
-                  <label>Pertes matière (%)<input type="number" min="0" max="100" value={waste} onChange={(e) => setWaste(e.target.value)} /></label>
-                  <label>Main-d’œuvre (FCFA)<input type="number" min="0" value={labor} onChange={(e) => setLabor(e.target.value)} /></label>
-                  <label>Quincaillerie (FCFA)<input type="number" min="0" value={hardware} onChange={(e) => setHardware(e.target.value)} /></label>
-                  <label>Finition (FCFA)<input type="number" min="0" value={finish} onChange={(e) => setFinish(e.target.value)} /></label>
-                  <label>Charges (FCFA)<input type="number" min="0" value={overhead} onChange={(e) => setOverhead(e.target.value)} /></label>
-                  <label>Marge brute cible (%)<input type="number" min="0" max="99.99" step="0.1" value={margin} onChange={(e) => setMargin(e.target.value)} /></label>
+              <section className="panel parametric-panel">
+                <div className="panel-heading"><div><span className="section-kicker">AJUSTEMENT PARAMÉTRIQUE</span><h2>{selectedModel.title}</h2></div><Ruler size={22} /></div>
+                <p className="panel-lead">Valeurs de départ du modèle. Ajustez-les selon le besoin du client et les contraintes du lieu.</p>
+                <div className="dimension-sliders">
+                  <label><span>Largeur (L)</span><b>{width} cm</b><input aria-label="Largeur en centimètres" type="range" min="60" max="400" value={width} onChange={(event) => setWidth(event.target.value)} /></label>
+                  <label><span>Hauteur (H)</span><b>{height} cm</b><input aria-label="Hauteur en centimètres" type="range" min="50" max="300" value={height} onChange={(event) => setHeight(event.target.value)} /></label>
+                  <label><span>Profondeur (P)</span><b>{depth} cm</b><input aria-label="Profondeur en centimètres" type="range" min="30" max="250" value={depth} onChange={(event) => setDepth(event.target.value)} /></label>
                 </div>
-                <div className="estimate-result">
-                  <div><span>Coût total estimé</span><b>{estimate ? money(estimate.totalCost) : "À vérifier"}</b></div>
-                  <div><span>Prix de vente cible</span><b>{estimate ? money(estimate.targetSellingPrice) : "À vérifier"}</b></div>
-                </div>
-                <p className="calculation-note">Ce calcul porte sur la nomenclature saisie. Il ne calcule ni les pièces, ni le débit, ni l’optimisation des panneaux à partir des dimensions.</p>
-                <button className="wood-button" type="button" onClick={() => setEstimateRequested(true)}>Voir les hypothèses de calcul</button>
-                {estimateRequested && <ul className="assumptions">{estimate?.assumptions.map((item) => <li key={item}>{item}</li>) ?? <li>Vérifiez les montants et pourcentages saisis.</li>}</ul>}
+                <div className="material-callout"><Ruler size={19} /><div><b>Mesures de référence</b><p>Ces dimensions ne génèrent pas automatiquement une liste de pièces. Le débit doit être établi à partir d’une nomenclature validée, des épaisseurs et du sens du fil.</p></div></div>
               </section>
             </div>
+
+            <div className="section-intro estimate-intro"><div><span className="section-kicker">CALCUL TRANSPARENT</span><h2>Préparer le coût de fabrication</h2></div><span className="local-only">Calcul local · non enregistré</span></div>
+            <section className="panel estimate-panel-new" id="estimate-panel">
+              <div className="panel-heading"><div><span className="section-kicker">MATIÈRES & FINITIONS</span><h2>Nomenclature et coûts vérifiés</h2></div><Paintbrush size={22} /></div>
+              <p className="panel-lead">Renseignez les montants réellement constatés auprès de vos fournisseurs. Aucun tarif de démonstration n’est prérempli.</p>
+              <div className="cost-fields">
+                <label className="wide-field">Essence / matériau de base<select value={material} onChange={(event) => setMaterial(event.target.value)}><option value="">Choisir un panneau</option>{sheetMaterials.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label>Nombre de panneaux<input type="number" min="0.01" step="0.01" value={quantity} onChange={(event) => setQuantity(event.target.value)} /></label>
+                <label>Prix par panneau (FCFA)<input type="number" min="0" value={unitPrice} onChange={(event) => setUnitPrice(event.target.value)} /></label>
+                <label>Pertes matière (%)<input type="number" min="0" max="100" value={waste} onChange={(event) => setWaste(event.target.value)} /></label>
+                <label>Finition & protection<select value={finishType} onChange={(event) => setFinishType(event.target.value)}><option value="">Choisir une finition</option>{finishOptions.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+                <label>Main-d’œuvre (FCFA)<input type="number" min="0" value={labor} onChange={(event) => setLabor(event.target.value)} /></label>
+                <label>Quincaillerie (FCFA)<input type="number" min="0" value={hardware} onChange={(event) => setHardware(event.target.value)} /></label>
+                <label>Coût de finition (FCFA)<input type="number" min="0" value={finishCost} onChange={(event) => setFinishCost(event.target.value)} /></label>
+                <label>Charges atelier (FCFA)<input type="number" min="0" value={overhead} onChange={(event) => setOverhead(event.target.value)} /></label>
+                <label>Marge brute cible (%)<input type="number" min="0" max="99.99" step="0.1" value={margin} onChange={(event) => setMargin(event.target.value)} /></label>
+              </div>
+              <div className="estimate-result">
+                <div><span>Coût de fabrication estimé</span><b>{estimate ? money(estimate.totalCost) : "À renseigner"}</b></div>
+                <div><span>Prix de vente cible</span><b>{estimate ? money(estimate.targetSellingPrice) : "À renseigner"}</b></div>
+              </div>
+              <p className="calculation-note">Cette première estimation calcule une ligne de matière et les coûts complémentaires saisis. Elle ne constitue pas encore un plan de débit ni une nomenclature multi-pièces complète.</p>
+              <button className="wood-button" type="button" onClick={() => setEstimateRequested(true)}>Vérifier les hypothèses de calcul</button>
+              {estimateRequested && <ul className="assumptions">{estimate?.assumptions.map((item) => <li key={item}>{item}</li>) ?? <li>Complétez tous les champs, choisissez une matière et une finition pour obtenir une estimation.</li>}</ul>}
+            </section>
           </>
         )}
 
-        {section === "production" && <><div className="section-intro"><div><span className="section-kicker">02 / FABRICATION</span><h2>Chaque ouvrage, un dossier clair</h2></div></div><div className="feature-strip"><Hammer size={27}/><div><h3>Du lancement à la livraison</h3><p>Ordres de fabrication, opérations, responsables, échéances, photos, contrôle qualité et garantie seront réunis dans un dossier unique.</p></div></div><EmptyState title="Aucun dossier de fabrication connecté" detail="Les commandes de démonstration ont été retirées. Connectez un atelier et créez un vrai dossier pour commencer le suivi." /></>}
-        {section === "atelier" && <><div className="section-intro"><div><span className="section-kicker">03 / PILOTAGE</span><h2>Les indicateurs doivent refléter votre atelier</h2></div></div><div className="metric-explain-grid"><article className="metric-explain"><Ruler/><h3>Délais</h3><p>Respect des dates promises, calculé sur les commandes réelles.</p></article><article className="metric-explain"><Axe/><h3>Rentabilité</h3><p>Marge des dossiers clôturés et suffisamment renseignés.</p></article><article className="metric-explain"><Wrench/><h3>Qualité</h3><p>Contrôles, reprises et garanties documentés.</p></article></div><EmptyState title="Score non calculé" detail="Aucun score arbitraire n’est affiché. Il sera calculé lorsque les données de production, de coûts et de qualité seront fiables." /></>}
-        {section === "materiaux" && <><div className="section-intro"><div><span className="section-kicker">04 / MATIÈRES PREMIÈRES</span><h2>Le bois et chaque composant sous contrôle</h2></div></div><div className="craft-grid material-grid">{["Bois massif & essences locales","MDF, mélaminé & contreplaqué","Charnières, glissières & visserie","Colles, vernis & abrasifs"].map((item) => <article className="craft-card" key={item}><div className="craft-icon"><TreePine size={22}/></div><h3>{item}</h3></article>)}</div><EmptyState title="Référentiel matières à initialiser" detail="Les prix seront associés à une unité, une région, une date et une source vérifiable. Aucun prix indicatif ne sera présenté comme un tarif national." /></>}
-        {section === "clients" && <><div className="section-intro"><div><span className="section-kicker">05 / RELATION CLIENT</span><h2>Vos clients, vos échanges, vos engagements</h2></div></div><div className="feature-strip"><Drill size={27}/><div><h3>Un suivi respectueux et utile</h3><p>Contacts, consentements, historique, devis, commandes et rappels. Les relances WhatsApp resteront manuelles tant qu’aucune intégration autorisée n’est configurée.</p></div></div><EmptyState title="Carnet de clients vide" detail="Aucun faux client n’est affiché. Les fiches seront créées et sauvegardées après activation de l’identité et de la base de données." /></>}
-        {section === "roadmap" && <><div className="section-intro"><div><span className="section-kicker">06 / CONSTRUCTION</span><h2>Les fondations avant les finitions</h2></div></div><div className="roadmap-list">{roadmap.map(([title, detail], index) => <article className="roadmap-row" key={title}><span className="roadmap-number">{String(index + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{detail}</p></div><span className="roadmap-status">À construire</span></article>)}</div></>}
+        {section === "production" && (
+          <>
+            <div className="section-intro"><div><span className="section-kicker">02 / SUIVI DE FABRICATION</span><h2>Production & passeport numérique QR</h2></div></div>
+            <div className="production-steps">
+              {[
+                ["Préparation", "Dossier, mesures et nomenclature", Ruler],
+                ["Débit", "Panneaux, pièces et chutes", Axe],
+                ["Assemblage", "Montage et ajustements", Hammer],
+                ["Finition", "Ponçage, huile, vernis ou laque", Paintbrush],
+                ["Contrôle", "Vérification avant livraison", Wrench],
+              ].map(([title, detail, Icon]) => {
+                const StepIcon = Icon as typeof Hammer;
+                return <article className="production-step" key={title as string}><StepIcon size={22} /><h3>{title as string}</h3><p>{detail as string}</p></article>;
+              })}
+            </div>
+            <div className="feature-strip"><Hammer size={27} /><div><h3>Un dossier par ouvrage</h3><p>Les commandes réelles réuniront les tâches, responsables, dates, photos, contrôles, livraison et garantie. Le passeport QR sera généré uniquement après création d’un ouvrage enregistré.</p></div></div>
+            <EmptyState title="Aucun dossier de fabrication connecté" detail="Les commandes fictives de l’ancienne maquette ont été retirées. Les passeports QR ne seront pas simulés : ils seront liés à un meuble réel et à des informations publiques autorisées." />
+          </>
+        )}
+
+        {section === "sante" && (
+          <>
+            <div className="section-intro"><div><span className="section-kicker">03 / PILOTAGE D’ATELIER</span><h2>Score Santé de l’atelier</h2></div><span className="local-only">Score non calculé</span></div>
+            <div className="metric-explain-grid">
+              <article className="metric-explain"><Ruler /><h3>Respect des délais</h3><p>Calculé sur les dates promises et les livraisons réellement clôturées.</p></article>
+              <article className="metric-explain"><Axe /><h3>Marge moyenne</h3><p>Calculée sur les coûts et prix de vente des dossiers complets.</p></article>
+              <article className="metric-explain"><Hammer /><h3>Recouvrement clients</h3><p>Suivi des paiements enregistrés et des soldes dus.</p></article>
+              <article className="metric-explain"><TreePine /><h3>Rotation des stocks</h3><p>Évaluée à partir des entrées, sorties et inventaires.</p></article>
+            </div>
+            <EmptyState title="Score Santé indisponible pour le moment" detail="Aucun 82/100 fictif n’est affiché. Le score et les conseils seront calculés lorsque les données de production, de coûts, de paiements et de stock seront fiables." />
+          </>
+        )}
+
+        {section === "prix" && (
+          <>
+            <div className="section-intro"><div><span className="section-kicker">04 / INTELLIGENCE COLLECTIVE DU MARCHÉ</span><h2>Base de Prix Nationale (FCFA)</h2></div><span className="local-only">Aucune cotation validée</span></div>
+            <div className="craft-grid price-category-grid">
+              <article className="craft-card"><div className="craft-icon"><TreePine size={23} /></div><div><h3>Bois & panneaux</h3><p>Essences, MDF, contreplaqué, mélaminé et formats.</p></div></article>
+              <article className="craft-card"><div className="craft-icon"><Wrench size={23} /></div><div><h3>Quincaillerie</h3><p>Charnières, glissières, vis, poignées et accessoires.</p></div></article>
+              <article className="craft-card"><div className="craft-icon"><Paintbrush size={23} /></div><div><h3>Finitions & consommables</h3><p>Colles, abrasifs, huiles, vernis et peintures.</p></div></article>
+              <article className="craft-card"><div className="craft-icon"><Ruler size={23} /></div><div><h3>Prix de vente d’ouvrages</h3><p>Fourchettes observées par type de meuble et région.</p></div></article>
+            </div>
+            <EmptyState title="Référentiel de prix à constituer" detail="Chaque observation devra indiquer la région, l’unité, la date, la source et la qualité du matériau. Aucun prix ne sera présenté comme national sans données suffisantes et vérifiées." />
+          </>
+        )}
+
+        {section === "crm" && (
+          <>
+            <div className="section-intro"><div><span className="section-kicker">05 / FIDÉLISATION CLIENT</span><h2>CRM Artisan & carnet de clients</h2></div></div>
+            <div className="feature-strip"><Drill size={27} /><div><h3>Une relation client simple et suivie</h3><p>Contacts, consentements, historique, devis, commandes, préférences et rappels. Les relances WhatsApp resteront manuelles tant qu’aucune intégration autorisée n’est configurée.</p></div></div>
+            <EmptyState title="Carnet de clients vide" detail="Aucun nom, numéro ou achat fictif n’est conservé. Les fiches clients seront créées dans l’espace privé de chaque atelier." />
+          </>
+        )}
+
+        {section === "roadmap" && (
+          <>
+            <div className="section-intro"><div><span className="section-kicker">06 / VISION STRATÉGIQUE</span><h2>Feuille de route SenMenuisier</h2></div></div>
+            <div className="roadmap-list">{roadmap.map(([title, detail, status], index) => <article className="roadmap-row" key={title}><span className="roadmap-number">{String(index + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{detail}</p></div><span className="roadmap-status">{status}</span></article>)}</div>
+          </>
+        )}
       </main>
-      <footer className="app-footer"><span>SenMenuisier</span><i>·</i> Le savoir-faire sénégalais, connecté au monde. <i>·</i> <span>Aperçu de conception</span></footer>
+      <footer className="app-footer"><span>SenMenuisier</span><i>·</i> Le savoir-faire sénégalais, connecté au monde. <i>·</i> Aperçu de conception</footer>
     </div>
   );
 }
