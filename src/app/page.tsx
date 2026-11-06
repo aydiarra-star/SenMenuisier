@@ -72,6 +72,7 @@ export default function HomePage() {
   const [width, setWidth] = useState("180");
   const [height, setHeight] = useState("220");
   const [depth, setDepth] = useState("60");
+  const [measurementsVerified, setMeasurementsVerified] = useState(false);
   const [material, setMaterial] = useState("");
   const [finishType, setFinishType] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -113,6 +114,7 @@ export default function HomePage() {
     setWidth(String(model.width));
     setHeight(String(model.height));
     setDepth(String(model.depth));
+    setMeasurementsVerified(false);
   }
 
   return (
@@ -176,10 +178,23 @@ export default function HomePage() {
                 <div className="panel-heading"><div><span className="section-kicker">AJUSTEMENT PARAMÉTRIQUE</span><h2>{selectedModel.title}</h2></div><Ruler size={22} /></div>
                 <p className="panel-lead">Valeurs de départ du modèle. Ajustez-les selon le besoin du client et les contraintes du lieu.</p>
                 <div className="dimension-sliders">
-                  <label><span>Largeur (L)</span><b>{width} cm</b><input aria-label="Largeur en centimètres" type="range" min="60" max="400" value={width} onChange={(event) => setWidth(event.target.value)} /></label>
-                  <label><span>Hauteur (H)</span><b>{height} cm</b><input aria-label="Hauteur en centimètres" type="range" min="50" max="300" value={height} onChange={(event) => setHeight(event.target.value)} /></label>
-                  <label><span>Profondeur (P)</span><b>{depth} cm</b><input aria-label="Profondeur en centimètres" type="range" min="30" max="250" value={depth} onChange={(event) => setDepth(event.target.value)} /></label>
+                  <label><span>Largeur (L)</span><b>{width} cm</b><input aria-label="Largeur en centimètres" type="range" min="60" max="400" value={width} onChange={(event) => { setWidth(event.target.value); setMeasurementsVerified(false); }} /></label>
+                  <label><span>Hauteur (H)</span><b>{height} cm</b><input aria-label="Hauteur en centimètres" type="range" min="50" max="300" value={height} onChange={(event) => { setHeight(event.target.value); setMeasurementsVerified(false); }} /></label>
+                  <label><span>Profondeur (P)</span><b>{depth} cm</b><input aria-label="Profondeur en centimètres" type="range" min="30" max="250" value={depth} onChange={(event) => { setDepth(event.target.value); setMeasurementsVerified(false); }} /></label>
                 </div>
+                <div className="measurement-check">
+                  <div className="measurement-check-copy">
+                    <span className="section-kicker">CONTRÔLE SUR PLACE</span>
+                    <strong>Vérifier les trois cotes avant le devis</strong>
+                    <p>Relevez largeur, hauteur et profondeur au mètre. L’aide caméra/AR du téléphone n’est pas encore active : aucune mesure automatique n’est simulée.</p>
+                  </div>
+                  <button className={measurementsVerified ? "measurement-confirm is-verified" : "measurement-confirm"} type="button" aria-pressed={measurementsVerified} onClick={() => setMeasurementsVerified((value) => !value)}>
+                    <Ruler size={16} /> {measurementsVerified ? "Relevé vérifié" : "Confirmer le relevé"}
+                  </button>
+                </div>
+                <p className={measurementsVerified ? "measurement-status is-verified" : "measurement-status"} role="status">
+                  {measurementsVerified ? "Les trois cotes sont marquées comme vérifiées pour cette session. Toute modification annulera cette confirmation." : "Relevé non confirmé · vérifiez les dimensions sur place."}
+                </p>
                 <div className="material-callout"><Ruler size={19} /><div><b>Mesures de référence</b><p>Ces dimensions ne génèrent pas automatiquement une liste de pièces. Le débit doit être établi à partir d’une nomenclature validée, des épaisseurs et du sens du fil.</p></div></div>
               </section>
             </div>
