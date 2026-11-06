@@ -12,12 +12,17 @@ describe("workshop permission defaults", () => {
     for (const role of ["manager", "carpenter", "apprentice"] as const) {
       expect(canAccessWorkshopPermission(role, "finance.read")).toBe(false);
       expect(canAccessWorkshopPermission(role, "finance.write")).toBe(false);
+      expect(canAccessWorkshopPermission(role, "quotes.costs.read")).toBe(false);
+      expect(canAccessWorkshopPermission(role, "quotes.costs.write")).toBe(false);
+      expect(canAccessWorkshopPermission(role, "inventory.costs.read")).toBe(false);
+      expect(canAccessWorkshopPermission(role, "suppliers.costs.read")).toBe(false);
     }
   });
 
   it("allows only explicitly supplied server-verified grants to extend access", () => {
     expect(canAccessWorkshopPermission("manager", "finance.read")).toBe(false);
     expect(canAccessWorkshopPermission("manager", "finance.read", ["finance.read"])).toBe(true);
+    expect(canAccessWorkshopPermission("manager", "quotes.costs.read", ["quotes.costs.read"])).toBe(true);
     expect(canAccessWorkshopPermission("manager", "finance.write", ["finance.read"])).toBe(false);
     expect(canAccessWorkshopPermission("manager", "finance.write", ["finance.write"])).toBe(true);
   });
