@@ -29,6 +29,8 @@ export const workshopRoleSchema = z.enum([
   "apprentice",
 ]);
 
+export type WorkshopRole = z.infer<typeof workshopRoleSchema>;
+
 export const workshopSchema = z.object({
   id: z.string().uuid().optional(),
   name: z.string().trim().min(2).max(120),
