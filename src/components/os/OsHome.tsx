@@ -172,7 +172,7 @@ export default function OsHome() {
               </span>
               <div>
                 <h2 id="os-config-title">Concevez votre meuble</h2>
-                <p>Ajustez les dimensions, les matériaux et visualisez en 3D</p>
+                <p>Ajustez les dimensions et les matériaux pour préparer votre estimation</p>
               </div>
             </div>
 
@@ -243,10 +243,10 @@ export default function OsHome() {
                     onClick={() => {
                       os.selectModel(model.id);
                       os.go("catalogue");
-                      os.notify("Le modèle et les cotes sont repris dans le catalogue. La vue 3D n’est pas encore disponible : aucun rendu n’est simulé.");
+                      os.notify("Le modèle et les cotes sont repris dans le catalogue. Le rendu 3D sera ajouté dans une prochaine étape.");
                     }}
                   >
-                    <VisualIcon /> Visualiser en 3D
+                    <VisualIcon /> Préparer les cotes
                   </button>
                   <button
                     type="button"
