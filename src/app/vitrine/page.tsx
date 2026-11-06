@@ -9,7 +9,7 @@ const spaces = [
   { title: "Score Santé atelier", text: "Comprendre les délais, les coûts, les paiements et les stocks à partir de données fiables.", icon: Ruler },
   { title: "Base de Prix nationale", text: "Documenter les prix par région, unité, qualité, date et source vérifiable.", icon: TreePine },
   { title: "CRM artisan", text: "Garder les contacts, les consentements, les devis et les relances au même endroit.", icon: Drill },
-  { title: "Vitrine & réseau", text: "Valoriser les réalisations et faciliter les demandes de devis entre clients et artisans.", icon: Paintbrush },
+  { title: "Feuille de route", text: "Suivre les étapes de construction de l’outil, les priorités métier et les prochaines évolutions de l’atelier numérique.", icon: Axe },
 ];
 
 export default function VitrinePage() {
