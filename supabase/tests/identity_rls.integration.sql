@@ -4,7 +4,9 @@
 insert into auth.users (id) values
   ('10000000-0000-4000-8000-000000000001'),
   ('10000000-0000-4000-8000-000000000002'),
-  ('10000000-0000-4000-8000-000000000003')
+  ('10000000-0000-4000-8000-000000000003'),
+  ('10000000-0000-4000-8000-000000000004'),
+  ('10000000-0000-4000-8000-000000000005')
 on conflict do nothing;
 
 -- Profile writes are restricted to user-editable columns.
@@ -43,7 +45,10 @@ select 1 / case when exists (
 
 -- Create a manager membership as a trusted database operator.
 insert into public.workshop_memberships (workshop_id, user_id, role, status)
-values (:'workshop_a'::uuid, '10000000-0000-4000-8000-000000000003', 'manager', 'active');
+values
+  (:'workshop_a'::uuid, '10000000-0000-4000-8000-000000000003', 'manager', 'active'),
+  (:'workshop_a'::uuid, '10000000-0000-4000-8000-000000000004', 'carpenter', 'active'),
+  (:'workshop_a'::uuid, '10000000-0000-4000-8000-000000000005', 'apprentice', 'active');
 
 -- Owner A sees A but never B.
 set role authenticated;
@@ -91,6 +96,26 @@ with changed as (
   where id = :'workshop_a'::uuid returning id
 )
 select 1 / case when count(*) = 0 then 1 else 0 end from changed;
+reset role;
+
+
+-- Carpenter can execute production work but cannot access clients or finance.
+set role authenticated;
+select set_config('request.jwt.claim.sub', '10000000-0000-4000-8000-000000000004', false);
+select 1 / case when private.has_workshop_permission(:'workshop_a'::uuid, 'production.read') then 1 else 0 end;
+select 1 / case when private.has_workshop_permission(:'workshop_a'::uuid, 'production.write') then 1 else 0 end;
+select 1 / case when not private.has_workshop_permission(:'workshop_a'::uuid, 'clients.read') then 1 else 0 end;
+select 1 / case when not private.has_workshop_permission(:'workshop_a'::uuid, 'finance.read') then 1 else 0 end;
+reset role;
+
+-- Apprentice can read workshop tasks but cannot change production or see private records.
+set role authenticated;
+select set_config('request.jwt.claim.sub', '10000000-0000-4000-8000-000000000005', false);
+select 1 / case when private.has_workshop_permission(:'workshop_a'::uuid, 'production.read') then 1 else 0 end;
+select 1 / case when not private.has_workshop_permission(:'workshop_a'::uuid, 'production.write') then 1 else 0 end;
+select 1 / case when private.has_workshop_permission(:'workshop_a'::uuid, 'inventory.read') then 1 else 0 end;
+select 1 / case when not private.has_workshop_permission(:'workshop_a'::uuid, 'clients.read') then 1 else 0 end;
+select 1 / case when not private.has_workshop_permission(:'workshop_a'::uuid, 'finance.read') then 1 else 0 end;
 reset role;
 
 -- Client roles cannot write memberships or forge audit history directly.
