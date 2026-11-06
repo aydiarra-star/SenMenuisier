@@ -327,3 +327,6 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #D4A3
   .estimate-breakdown{padding:12px}
   .estimate-breakdown-heading{align-items:flex-start;flex-direction:column;gap:4px}
 }
+
+/* L’ancre partagée ouvre le catalogue sous la navigation fixe. */
+#selection{scroll-margin-top:150px}
