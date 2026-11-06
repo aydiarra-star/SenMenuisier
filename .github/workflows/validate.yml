@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [main, "design/**"]
+    branches: [main, "design/**", "feature/**"]
 permissions:
   contents: read
 jobs:
@@ -15,6 +15,7 @@ jobs:
         with:
           node-version: 24.22.1
       - run: npm ci
+      - run: npm test
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run build
