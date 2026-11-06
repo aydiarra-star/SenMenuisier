@@ -135,6 +135,7 @@ export default function HomePage() {
           <div className="top-actions">
             <Link className="site-link" href="/vitrine">Site public</Link>
             <div className="workspace-chip"><span className="wood-dot" /><span><b>Espace atelier</b><small>Aperçu · aucun atelier connecté</small></span></div>
+            <span className="language-chip">FR <i>·</i> WOLOF EN VALIDATION</span>
             <button className="health-chip" type="button" onClick={() => setSection("sante")}><Ruler size={15} /><span>Score Santé : <b>Non calculé</b></span></button>
             <button className="quote-chip" type="button" onClick={() => { setSection("catalogue"); setEstimateRequested(true); }}><Hammer size={15} /><span>Préparer une estimation</span></button>
           </div>
