@@ -1,7 +1,6 @@
 import Link from "next/link";
+import { Axe, Hammer, Ruler, TreePine, Wrench } from "lucide-react";
 import { productSpaces } from "@/lib/product-spaces";
-
-
 
 export default function VitrinePage() {
   return (
