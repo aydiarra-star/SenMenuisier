@@ -4,6 +4,11 @@ begin;
 
 create extension if not exists pgcrypto with schema extensions;
 
+-- Internal authorization helpers live outside Supabase's exposed API schemas.
+create schema if not exists private;
+revoke all on schema private from public, anon, authenticated;
+grant usage on schema private to authenticated;
+
 create type public.workshop_role as enum ('owner', 'manager', 'carpenter', 'apprentice');
 create type public.membership_status as enum ('active', 'revoked');
 
@@ -98,7 +103,7 @@ create index audit_events_workshop_created_idx
 
 -- SECURITY DEFINER is restricted to small authorization predicates to avoid RLS recursion.
 -- No table writes or user-controlled dynamic SQL occur in these functions.
-create or replace function public.is_active_workshop_member(p_workshop_id uuid)
+create or replace function private.is_active_workshop_member(p_workshop_id uuid)
 returns boolean
 language sql
 stable
@@ -114,7 +119,7 @@ as $$
   );
 $$;
 
-create or replace function public.has_workshop_permission(
+create or replace function private.has_workshop_permission(
   p_workshop_id uuid,
   p_permission text
 )
@@ -154,10 +159,10 @@ as $$
   );
 $$;
 
-revoke all on function public.is_active_workshop_member(uuid) from public, anon;
-revoke all on function public.has_workshop_permission(uuid, text) from public, anon;
-grant execute on function public.is_active_workshop_member(uuid) to authenticated;
-grant execute on function public.has_workshop_permission(uuid, text) to authenticated;
+revoke all on function private.is_active_workshop_member(uuid) from public, anon;
+revoke all on function private.has_workshop_permission(uuid, text) from public, anon;
+grant execute on function private.is_active_workshop_member(uuid) to authenticated;
+grant execute on function private.has_workshop_permission(uuid, text) to authenticated;
 
 alter table public.profiles enable row level security;
 alter table public.workshops enable row level security;
@@ -175,17 +180,17 @@ create policy profiles_update_self on public.profiles
   with check (id = (select auth.uid()));
 
 create policy workshops_select_member on public.workshops
-  for select to authenticated using (public.is_active_workshop_member(id));
+  for select to authenticated using (private.is_active_workshop_member(id));
 create policy workshops_insert_creator on public.workshops
   for insert to authenticated with check (created_by = (select auth.uid()));
 create policy workshops_update_owner on public.workshops
-  for update to authenticated using (public.has_workshop_permission(id, 'workshop.write'))
-  with check (public.has_workshop_permission(id, 'workshop.write'));
+  for update to authenticated using (private.has_workshop_permission(id, 'workshop.write'))
+  with check (private.has_workshop_permission(id, 'workshop.write'));
 
 create policy memberships_select_self_or_manager on public.workshop_memberships
   for select to authenticated using (
     user_id = (select auth.uid())
-    or public.has_workshop_permission(workshop_id, 'members.manage')
+    or private.has_workshop_permission(workshop_id, 'members.manage')
   );
 -- Membership creation/revocation is server-mediated by a verified invitation workflow.
 -- No direct INSERT/UPDATE/DELETE policy is intentionally provided to authenticated clients.
@@ -194,11 +199,11 @@ create policy memberships_select_self_or_manager on public.workshop_memberships
 -- Their raw token hashes and permission grant records are never exposed through the client API.
 
 create policy audit_events_select_authorized on public.audit_events
-  for select to authenticated using (public.has_workshop_permission(workshop_id, 'audit.read'));
+  for select to authenticated using (private.has_workshop_permission(workshop_id, 'audit.read'));
 create policy audit_events_insert_actor on public.audit_events
   for insert to authenticated with check (
     actor_user_id = (select auth.uid())
-    and public.is_active_workshop_member(workshop_id)
+    and private.is_active_workshop_member(workshop_id)
   );
 -- Audit events are append-only: no UPDATE or DELETE policy.
 
