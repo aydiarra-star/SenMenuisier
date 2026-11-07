@@ -50,6 +50,7 @@ export default function OsExpressModal() {
       targetPrice: Math.round(total),
       deposit: Number.isFinite(advance) ? Math.round(advance) : 0,
       depositPaid: false,
+      status: "draft",
       deliveryTarget: "",
       createdAt: now.toISOString(),
       lines: [{ label: `Devis express · ${model.title}`, amount: Math.round(total) }],
