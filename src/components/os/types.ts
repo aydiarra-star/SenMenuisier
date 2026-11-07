@@ -14,6 +14,8 @@ export type QuoteDraft = {
   targetPrice: number;
   deposit: number;
   depositPaid: boolean;
+  status?: "draft" | "accepted" | "rejected";
+  productionJobId?: string;
   deliveryTarget: string;
   createdAt: string;
   lines: { label: string; amount: number }[];
