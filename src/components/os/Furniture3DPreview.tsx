@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState } from "react";\nimport type { FurnitureConfiguration } from "./types";
 
 type Props = {
   width: string;
@@ -19,7 +19,7 @@ const woodColors: Record<string, string> = {
   "Fromager": "#C5A77C",
 };
 
-export default function Furniture3DPreview({ width, height, depth, material, finish }: Props) {
+export default function Furniture3DPreview({ width, height, depth, material, finish, configuration, onConfigurationChange }: Props) {
   const [rotation, setRotation] = useState({ x: -12, y: -28 });
   const [doors, setDoors] = useState(true);
   const [drawers, setDrawers] = useState(0);
@@ -108,20 +108,20 @@ export default function Furniture3DPreview({ width, height, depth, material, fin
       <div className="sm-3d-controls" aria-label="Personnaliser les composants du meuble">
         <span className="sm-3d-controls-title">Personnaliser le meuble</span>
         <div className="sm-3d-control-row">
-          <button type="button" aria-pressed={doors} onClick={() => setDoors((value) => !value)}>Portes {doors ? "✓" : "+"}</button>
-          <button type="button" aria-pressed={handles} onClick={() => setHandles((value) => !value)}>Poignées {handles ? "✓" : "—"}</button>
+          <button type="button" aria-pressed={doors} onClick={() => onConfigurationChange({ ...configuration, doors: !doors })}>Portes {doors ? "✓" : "+"}</button>
+          <button type="button" aria-pressed={handles} onClick={() => onConfigurationChange({ ...configuration, handles: !handles })}>Poignées {handles ? "✓" : "—"}</button>
           <label>Tiroirs
-            <select value={drawers} onChange={(event) => setDrawers(Number(event.target.value))}>
+            <select value={drawers} onChange={(event) => onConfigurationChange({ ...configuration, drawers: Number(event.target.value) })}>
               <option value={0}>0</option><option value={1}>1</option><option value={2}>2</option><option value={3}>3</option>
             </select>
           </label>
           <label>Étagères
-            <select value={shelves} onChange={(event) => setShelves(Number(event.target.value))}>
+            <select value={shelves} onChange={(event) => onConfigurationChange({ ...configuration, shelves: Number(event.target.value) })}>
               <option value={0}>0</option><option value={1}>1</option><option value={2}>2</option><option value={3}>3</option><option value={4}>4</option>
             </select>
           </label>
         </div>
-        <small>Modifications visuelles locales à cet aperçu. Elles ne sont pas encore enregistrées dans une fiche technique.</small>
+        <small>Configuration enregistrée automatiquement dans ce navigateur et reprise dans les nouveaux devis.</small>
       </div>
       {!valid ? <p className="sm-3d-error">Saisissez trois dimensions positives pour afficher le volume.</p> : null}
       <style jsx>{`
