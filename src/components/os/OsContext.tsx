@@ -85,7 +85,7 @@ export function OsProvider({ children }: { children: ReactNode }) {
   /* Lien direct : /?vue=crm ouvre l’espace demandé sans écran intermédiaire. */
   useEffect(() => {
     const requested = new URLSearchParams(window.location.search).get("vue");
-    const allowed: OsSectionId[] = ["catalogue", "production", "sante", "prix", "crm", "roadmap"];
+    const allowed: OsSectionId[] = ["catalogue", "production", "sante", "prix", "crm", "roadmap", "planning", "settings"];
     if (requested && (allowed as string[]).includes(requested)) setSection(requested as OsSectionId);
   }, []);
 
