@@ -149,7 +149,7 @@ export default function Furniture3DPreview({ width, height, depth, material, fin
         .sm-3d-controls{padding:10px 11px;border:1px solid #e8dfd2;border-radius:10px;background:#fffdf9;display:grid;gap:8px}
         .sm-3d-controls-title{font-size:11px;font-weight:700;color:#574633}
         .sm-3d-control-row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-        .sm-3d-control-row button,.sm-3d-control-row label{min-height:32px;border:1px solid #dfd3c2;border-radius:7px;background:#fff;padding:0 9px;color:#574633;font:600 10px inherit;display:inline-flex;align-items:center;gap:5px}
+        .sm-3d-control-row button,.sm-3d-control-row label{min-height:32px;border:1px solid #dfd3c2;border-radius:7px;background:#fff;padding:0 9px;color:#574633;font-family:inherit;font-size:10px;font-weight:600;display:inline-flex;align-items:center;gap:5px}
         .sm-3d-control-row button[aria-pressed="true"]{background:#295f4e;color:#fff;border-color:#295f4e}
         .sm-3d-control-row select{border:0;background:transparent;color:inherit;font:inherit;outline-offset:2px}
         .sm-3d-controls>small{font-size:9px;color:#8b7a66;line-height:1.45}
