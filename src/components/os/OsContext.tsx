@@ -7,7 +7,7 @@ import {
   type WorkshopWorkspace,
 } from "@/lib/workshop-workspace";
 import { findOsModel } from "@/lib/os-models";
-import type { OsSectionId, QuoteDraft } from "./types";
+import { defaultFurnitureConfiguration, type FurnitureConfiguration, type OsSectionId, type QuoteDraft } from "./types";
 
 const WORKSPACE_KEY = "senmenuisier-workspace-v1";
 const SHELL_KEY = "senmenuisier-os-v1";
@@ -20,7 +20,7 @@ type ShellState = {
   favorites: string[];
 };
 
-const emptyShell: ShellState = { theme: "light", quotes: [], favorites: [] };
+const emptyShell: ShellState = { theme: "light", quotes: [], favorites: [], configuration: defaultFurnitureConfiguration };
 
 type OsContextValue = {
   section: OsSectionId;
@@ -111,7 +111,7 @@ export function OsProvider({ children }: { children: ReactNode }) {
         setShell({
           theme: parsed.theme === "dark" ? "dark" : "light",
           quotes: Array.isArray(parsed.quotes) ? parsed.quotes : [],
-          favorites: Array.isArray(parsed.favorites) ? parsed.favorites : [],
+          favorites: Array.isArray(parsed.favorites) ? parsed.favorites : [],\n          configuration: {\n            doors: typeof parsed.configuration?.doors === "boolean" ? parsed.configuration.doors : defaultFurnitureConfiguration.doors,\n            handles: typeof parsed.configuration?.handles === "boolean" ? parsed.configuration.handles : defaultFurnitureConfiguration.handles,\n            drawers: Number.isInteger(parsed.configuration?.drawers) && parsed.configuration.drawers >= 0 && parsed.configuration.drawers <= 3 ? parsed.configuration.drawers : defaultFurnitureConfiguration.drawers,\n            shelves: Number.isInteger(parsed.configuration?.shelves) && parsed.configuration.shelves >= 0 && parsed.configuration.shelves <= 4 ? parsed.configuration.shelves : defaultFurnitureConfiguration.shelves,\n          },
         });
       }
     } catch {
@@ -162,7 +162,7 @@ export function OsProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
-  const toggleFavorite = useCallback((id: string) => {
+  const setConfiguration = useCallback((configuration: FurnitureConfiguration) => {\n    setShell((current) => ({ ...current, configuration }));\n  }, []);\n\n  const toggleFavorite = useCallback((id: string) => {
     setShell((current) => ({
       ...current,
       favorites: current.favorites.includes(id)
@@ -230,7 +230,7 @@ export function OsProvider({ children }: { children: ReactNode }) {
     setPassportJob,
   }), [
     section, go, workspace, loaded, notice, notify, clearNotice, shell.quotes, shell.theme,
-    shell.favorites, addQuote, updateQuote, toggleTheme, toggleFavorite, selectedModelId,
+    shell.favorites, shell.configuration, addQuote, updateQuote, toggleTheme, toggleFavorite, setConfiguration, selectedModelId,
     selectModel, dimensions, setDimension, material, finish, openPasseport, printTarget,
     requestPrint, expressOpen, passportOpen, passportJob,
   ]);
