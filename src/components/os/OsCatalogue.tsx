@@ -420,7 +420,7 @@ export default function OsCatalogue() {
                     <b>Devis brouillon enregistré sur cet appareil.</b>
                     <div style={{ marginTop: 4 }}>
                       Client : {clientName}{clientContact ? ` · ${clientContact}` : ""}<br />
-                      Ouvrage : {model.title} · {dimensions}<br />
+                      Ouvrage : {model.title} · {dimensions}<br />\n                      Configuration : {os.configuration.doors ? "portes" : "sans portes"} · {os.configuration.drawers} tiroir(s) · {os.configuration.shelves} étagère(s) · {os.configuration.handles ? "avec poignées" : "sans poignées"}<br />
                       Prix cible indicatif : {money(estimate.targetSellingPrice)}<br />
                       Livraison souhaitée : {delivery || "à convenir"}
                     </div>
@@ -493,7 +493,7 @@ export default function OsCatalogue() {
         <p>{clientName || "—"}{clientContact ? ` · ${clientContact}` : ""}</p>
         <h2>Ouvrage proposé</h2>
         <p><strong>{model.title}</strong> — {dimensions}</p>
-        <p>Matière : {material || "à confirmer"} · Finition : {os.finish}</p>
+        <p>Matière : {material || "à confirmer"} · Finition : {os.finish}</p>\n        <p>Configuration : {os.configuration.doors ? "portes" : "sans portes"} · {os.configuration.drawers} tiroir(s) · {os.configuration.shelves} étagère(s) · {os.configuration.handles ? "avec poignées" : "sans poignées"}</p>
         <p>Livraison souhaitée : {delivery || "à convenir avec le client"}</p>
         <h2>Détail</h2>
         <table>
