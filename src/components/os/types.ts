@@ -2,6 +2,20 @@ export type OsSectionId = "accueil" | "catalogue" | "production" | "sante" | "pr
 
 export type OsNotify = (message: string) => void;
 
+export type FurnitureConfiguration = {
+  doors: boolean;
+  handles: boolean;
+  drawers: number;
+  shelves: number;
+};
+
+export const defaultFurnitureConfiguration: FurnitureConfiguration = {
+  doors: true,
+  handles: true,
+  drawers: 0,
+  shelves: 2,
+};
+
 export type QuoteDraft = {
   id: string;
   number: string;
