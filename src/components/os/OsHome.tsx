@@ -12,6 +12,7 @@ import { neutralQrPayload } from "@/lib/qr";
 import { useOs } from "./OsContext";
 import QrCode from "./QrCode";
 import Furniture3DPreview from "./Furniture3DPreview";
+import OsReferenceDashboard from "./OsReferenceDashboard";
 
 const money = (value: number) =>
   new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(Math.round(value)) + " FCFA";
@@ -53,6 +54,8 @@ export default function OsHome() {
 
   return (
     <div className="os-module">
+      <OsReferenceDashboard />
+      <h2 className="os-existing-title">Votre espace atelier</h2>
       <div className="os-page">
         <div className="os-col-main">
           {/* ---------- Bandeau d'accueil ---------- */}
