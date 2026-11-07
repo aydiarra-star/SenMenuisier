@@ -8,6 +8,7 @@ import { calculateWorkshopEstimate } from "@/lib/estimate";
 import { averageVerifiedMdfPrice, findOsModel, osModels, woodEssences, woodFinishes } from "@/lib/os-models";
 import { useOs } from "./OsContext";
 import CutPlanTool from "./CutPlanTool";
+import Furniture3DPreview from "./Furniture3DPreview";
 
 const money = (value: number) =>
   new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(Math.round(value)) + " FCFA";
@@ -113,7 +114,7 @@ export default function OsCatalogue() {
               <span>01 / CONCEPTION &amp; ESTIMATION</span>
               <h1>Catalogue Intelligent de Meubles</h1>
               <p>
-                Choisissez un modèle, ajustez ses cotes, puis préparez une estimation avec les prix
+                Choisissez un modèle, ajustez ses cotes et ses finitions avec l’aperçu 3D, puis préparez une estimation avec les prix
                 réellement constatés par votre atelier.
               </p>
             </div>
@@ -224,22 +225,23 @@ export default function OsCatalogue() {
                 </label>
               </div>
               <div className="os-config-actions">
-                <button
-                  type="button"
-                  className="os-gold"
-                  onClick={() => os.notify("Vue 3D non disponible : aucun moteur de rendu n’est installé. Le croquis coté reste la seule visualisation.")}
-                >
-                  Visualiser en 3D
-                </button>
+                <span className="os-chip local">Aperçu 3D modifiable</span>
                 <button
                   type="button"
                   className="os-square"
                   aria-label="Plan de découpe"
-                  onClick={() => os.notify("Plan de découpe non disponible : aucune nomenclature de débit n’a été calculée, un plan ne peut donc pas être imprimé.")}
+                  onClick={() => os.notify("Le plan de découpe détaillé sera généré après validation de la nomenclature et des panneaux disponibles.")}
                 >
                   <Printer size={15} />
                 </button>
               </div>
+              <Furniture3DPreview
+                width={os.dimensions.width}
+                height={os.dimensions.height}
+                depth={os.dimensions.depth}
+                material={os.material}
+                finish={os.finish}
+              />
               <p className="os-config-note">
                 Relevé {verified ? "confirmé" : "non confirmé"} · {dimensions}. Ces cotes ne produisent
                 aucune liste de débit : le débit doit être établi à partir d’une nomenclature validée.
@@ -444,7 +446,7 @@ export default function OsCatalogue() {
             <CircleAlert size={15} />
             <div>
               <b>Données honnêtes.</b> Les prix, surfaces et marges proviennent uniquement de vos saisies.
-              Aucun tarif national, aucune mesure automatique et aucun rendu 3D ne sont simulés ici.
+              Aucun tarif national ni mesure automatique ne sont simulés. La vue 3D est un aperçu visuel indicatif, pas un plan technique certifié.
             </div>
           </div>
         </div>
@@ -458,7 +460,7 @@ export default function OsCatalogue() {
               <div className="os-table-row"><span>Main-d’œuvre, quincaillerie</span><b>{estimate ? "Oui" : "—"}</b></div>
               <div className="os-table-row"><span>Prix de vente cible</span><b>{estimate ? "Oui" : "—"}</b></div>
               <div className="os-table-row"><span>Plan de débit</span><b>Non</b></div>
-              <div className="os-table-row"><span>Vue 3D</span><b>Non</b></div>
+              <div className="os-table-row"><span>Aperçu 3D manipulable</span><b>Oui</b></div>
             </div>
             <p className="os-stat-note">
               « Non » signifie que la fonction n’existe pas encore : aucun succès n’est affiché à la
