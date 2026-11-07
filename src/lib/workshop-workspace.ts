@@ -7,6 +7,7 @@ export type ProductionJob = {
   status: ProductionStatus;
   createdAt: string;
   completedAt?: string;
+  sourceQuoteId?: string;
 };
 export type CrmContact = {
   id: string;

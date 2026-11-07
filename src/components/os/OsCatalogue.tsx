@@ -88,6 +88,7 @@ export default function OsCatalogue() {
       targetPrice: Math.round(estimate.targetSellingPrice),
       deposit,
       depositPaid: false,
+      status: "draft",
       deliveryTarget: delivery,
       createdAt: now.toISOString(),
       lines: [

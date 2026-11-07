@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import {
-  ArrowRight, Calculator, CalendarClock, CircleAlert, MessageCircle, Ruler, Users, Wallet,
+  ArrowRight, Calculator, CalendarClock, CircleAlert, MessageCircle, Ruler, Users, Wallet, Hammer,
 } from "lucide-react";
 import { calculateWorkshopEstimate } from "@/lib/estimate";
 import { calculateOperationalHealth } from "@/lib/workshop-workspace";
@@ -31,6 +31,7 @@ export default function OsSante() {
   });
   const [materialName, setMaterialName] = useState("");
   const [showAssumptions, setShowAssumptions] = useState(false);
+  const [deliveryDates, setDeliveryDates] = useState<Record<string, string>>({});
 
   const health = useMemo(() => calculateOperationalHealth(os.workspace.production), [os.workspace.production]);
   const today = new Date().toISOString().slice(0, 10);
@@ -58,7 +59,7 @@ export default function OsSante() {
     }
   }, [materialName, quantity, unitPrice, waste, margin, costs]);
 
-  const pendingQuotes = os.quotes.filter((quote) => !quote.depositPaid);
+  const pendingQuotes = os.quotes.filter((quote) => quote.status !== "rejected" && !quote.depositPaid);
   const securedDeposits = os.quotes.filter((quote) => quote.depositPaid)
     .reduce((sum, quote) => sum + quote.deposit, 0);
 
@@ -240,30 +241,62 @@ export default function OsSante() {
           </div>
         ) : (
           <div className="os-list">
-            {os.quotes.map((quote) => (
+            {os.quotes.map((quote) => {
+              const converted = Boolean(quote.productionJobId) || quote.status === "accepted";
+              const deliveryDate = deliveryDates[quote.id] ?? quote.deliveryTarget ?? "";
+              return (
               <article className="os-row-item" key={quote.id}>
                 <div className="grow">
                   <h4>{quote.number} · {quote.clientName}</h4>
                   <p>{quote.modelTitle} · {quote.dimensions} · {quote.material}</p>
                   <p>Prix cible : {money(quote.targetPrice)} · Acompte prévu : {money(quote.deposit)}</p>
-                  <span className={quote.depositPaid ? "os-chip local" : "os-chip warn"}>
-                    {quote.depositPaid ? <><CheckMark /> Acompte confirmé manuellement</> : "Acompte non confirmé"}
-                  </span>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }}>
+                    <span className={converted ? "os-chip local" : "os-chip"}>{converted ? "Commande créée" : quote.status === "rejected" ? "Devis refusé" : "Devis brouillon"}</span>
+                    <span className={quote.depositPaid ? "os-chip local" : "os-chip warn"}>
+                      {quote.depositPaid ? <><CheckMark /> Acompte confirmé manuellement</> : "Acompte non confirmé"}
+                    </span>
+                  </div>
                 </div>
-                {!quote.depositPaid ? (
-                  <button
-                    type="button"
-                    className="os-mini"
-                    onClick={() => {
+                <div style={{ display: "flex", gap: 7, flexWrap: "wrap", alignItems: "center" }}>
+                  {!quote.depositPaid ? (
+                    <button type="button" className="os-mini" onClick={() => {
                       os.updateQuote(quote.id, { depositPaid: true });
-                      os.notify("Acompte marqué comme reçu. Aucun paiement n’a été encaissé par l’application.");
-                    }}
-                  >
-                    Marquer l’acompte reçu
-                  </button>
-                ) : null}
+                      os.notify("Acompte marqué comme reçu manuellement. Aucun paiement n’a été encaissé par l’application.");
+                    }}>Marquer l’acompte reçu</button>
+                  ) : null}
+                  {!converted && quote.status !== "rejected" ? (
+                    <>
+                      <label style={{ display: "grid", gap: 3, fontSize: 10 }}>
+                        Livraison promise
+                        <input aria-label={`Date de livraison pour ${quote.number}`} type="date" min={today}
+                          value={deliveryDate} onChange={(event) => setDeliveryDates((current) => ({ ...current, [quote.id]: event.target.value }))} />
+                      </label>
+                      <button type="button" className="os-primary" style={{ width: "auto", padding: "0 12px" }}
+                        disabled={!deliveryDate}
+                        onClick={() => {
+                          const jobId = crypto.randomUUID();
+                          os.setWorkspace((current) => ({ ...current, production: [{
+                            id: jobId, title: quote.modelTitle, client: quote.clientName,
+                            dueDate: deliveryDate, status: "preparation", createdAt: new Date().toISOString(),
+                            sourceQuoteId: quote.id,
+                          }, ...current.production] }));
+                          os.updateQuote(quote.id, { status: "accepted", productionJobId: jobId, deliveryTarget: deliveryDate });
+                          os.notify(`Devis ${quote.number} converti en commande et dossier de fabrication. Vérifiez les détails dans Production.`);
+                        }}><Hammer size={13} /> Accepter & créer la commande</button>
+                    </>
+                  ) : converted ? <button type="button" className="os-mini" onClick={() => os.go("production")}>Voir la fabrication <ArrowRight size={13} /></button> : null}
+                  {quote.status !== "accepted" && quote.status !== "rejected" ? (
+                    <button type="button" className="os-mini" onClick={() => {
+                      if (window.confirm(`Refuser le devis ${quote.number} ?`)) {
+                        os.updateQuote(quote.id, { status: "rejected" });
+                        os.notify("Devis marqué comme refusé.");
+                      }
+                    }}>Refuser</button>
+                  ) : null}
+                </div>
               </article>
-            ))}
+            );
+            })}
           </div>
         )}
       </section>

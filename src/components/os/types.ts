@@ -1,4 +1,4 @@
-export type OsSectionId = "accueil" | "catalogue" | "production" | "sante" | "prix" | "crm" | "roadmap";
+export type OsSectionId = "accueil" | "catalogue" | "production" | "sante" | "prix" | "crm" | "roadmap" | "planning" | "settings";
 
 export type OsNotify = (message: string) => void;
 
@@ -14,6 +14,8 @@ export type QuoteDraft = {
   targetPrice: number;
   deposit: number;
   depositPaid: boolean;
+  status?: "draft" | "accepted" | "rejected";
+  productionJobId?: string;
   deliveryTarget: string;
   createdAt: string;
   lines: { label: string; amount: number }[];
