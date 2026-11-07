@@ -24,6 +24,14 @@ export default function Furniture3DPreview({ width, height, depth, material, fin
   const drag = useRef<{ x: number; y: number; rx: number; ry: number } | null>(null);
   const color = woodColors[material] ?? "#A77B4D";
   const valid = [width, height, depth].every((value) => Number.isFinite(Number(value)) && Number(value) > 0);
+  const dimensionScale = valid
+    ? {
+        x: Math.max(0.68, Math.min(1.28, Number(width) / 120)),
+        y: Math.max(0.72, Math.min(1.3, Number(height) / 90)),
+        z: Math.max(0.72, Math.min(1.3, Number(depth) / 50)),
+      }
+    : { x: 1, y: 1, z: 1 };
+  const finishGloss = /brillant|laqu[eé]/i.test(finish) ? 0.24 : /satin/i.test(finish) ? 0.15 : 0.08;
 
   function startDrag(event: React.PointerEvent<HTMLDivElement>) {
     drag.current = { x: event.clientX, y: event.clientY, rx: rotation.x, ry: rotation.y };
@@ -58,8 +66,9 @@ export default function Furniture3DPreview({ width, height, depth, material, fin
           <div
             className="sm-3d-cabinet"
             style={{
-              transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+              transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale3d(${dimensionScale.x}, ${dimensionScale.y}, ${dimensionScale.z})`,
               ["--wood" as string]: color,
+              ["--finish-gloss" as string]: finishGloss,
             } as React.CSSProperties}
           >
             <div className="sm-3d-face sm-3d-front">
@@ -87,7 +96,7 @@ export default function Furniture3DPreview({ width, height, depth, material, fin
         .sm-3d-cabinet{width:145px;height:112px;position:relative;transform-style:preserve-3d;transition:transform .08s linear}
         .sm-3d-face{position:absolute;box-sizing:border-box;border:1px solid rgba(67,45,25,.55);background:var(--wood);backface-visibility:visible}
         .sm-3d-front{inset:0;width:145px;height:112px;display:flex;gap:4px;padding:7px 6px 12px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.13);transform:translateZ(18px)}
-        .sm-3d-door{flex:1;border:1px solid rgba(75,48,25,.55);border-radius:2px;background:linear-gradient(105deg,rgba(255,255,255,.18),transparent 38%,rgba(45,25,10,.1));position:relative}
+        .sm-3d-door{flex:1;border:1px solid rgba(75,48,25,.55);border-radius:2px;background:linear-gradient(105deg,rgba(255,255,255,var(--finish-gloss)),transparent 38%,rgba(45,25,10,.1));position:relative}
         .sm-3d-door:after{content:"";position:absolute;right:5px;top:50%;width:3px;height:15px;border-radius:3px;background:#D7BD8B;box-shadow:0 0 1px #49341e}
         .sm-3d-plinth{position:absolute;left:0;right:0;bottom:0;height:9px;background:#62452d;border-top:1px solid rgba(255,255,255,.2)}
         .sm-3d-side{width:36px;height:112px;left:145px;top:0;transform:rotateY(90deg);transform-origin:left center;background:linear-gradient(90deg,#68482e,var(--wood))}
